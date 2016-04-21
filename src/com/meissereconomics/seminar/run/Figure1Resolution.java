@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.function.BiConsumer;
 
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.apache.commons.math3.stat.descriptive.moment.Variance;
 import org.apache.commons.math3.util.DoubleArray;
 import org.apache.commons.math3.util.ResizableDoubleArray;
 
@@ -13,8 +14,10 @@ import com.meissereconomics.seminar.util.InstantiatingHashmap;
 
 public class Figure1Resolution {
 	
+	/** 
+	 *  Produced output "Figure1Resolution.out"
+	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
-		// System.out.println("Run\tSectors\tReuse");
 		long t0 = System.nanoTime();
 		InstantiatingHashmap<Integer, DoubleArray> levels = new InstantiatingHashmap<Integer, DoubleArray>(){
 
@@ -24,12 +27,9 @@ public class Figure1Resolution {
 			}
 			
 		};
-		for (int run = 0; run < 10; run++) {
+		for (int run = 0; run < 100; run++) {
 			InputOutputGraph iograph = new InputOutputGraph("data/wiot05_row_apr12.CSV");
 			for (int level = InputOutputGraph.SECTORS; level > 0; level--) {
-				// for (Country c : iograph.getCountries()) {
-				// System.out.println(c.getStats());
-				// }
 				iograph.collapseRandomSectors(run * 31, level);
 				iograph.deriveOrigins();
 				double reuse = iograph.getGlobalImportReuse();
@@ -38,12 +38,13 @@ public class Figure1Resolution {
 			long deltaT = System.nanoTime() - t0;
 			System.out.println("Run " + run + " completed after " + deltaT / 1000000 + "ms");
 		}
-		System.out.println("Resolution\tImport Reuse");
+		System.out.println("Resolution\tMean Import Reuse\tVariance");
 		levels.forEach(new BiConsumer<Integer, DoubleArray>() {
 
 			@Override
 			public void accept(Integer t, DoubleArray u) {
-				System.out.println(t + "\t" + new Mean().evaluate(u.getElements()));
+				double[] samples = u.getElements();
+				System.out.println(t + "\t" + new Mean().evaluate(samples) + "\t" + new Variance().evaluate(samples));
 			}
 		});
 		
