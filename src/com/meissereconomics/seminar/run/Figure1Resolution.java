@@ -12,11 +12,11 @@ import org.apache.commons.math3.util.ResizableDoubleArray;
 import com.meissereconomics.seminar.InputOutputGraph;
 import com.meissereconomics.seminar.util.InstantiatingHashmap;
 
+/** 
+ *  Running this script should produce output "Figure1Resolution.out"
+ */
 public class Figure1Resolution {
-	
-	/** 
-	 *  Produced output "Figure1Resolution.out"
-	 */
+
 	public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
 		long t0 = System.nanoTime();
 		InstantiatingHashmap<Integer, DoubleArray> levels = new InstantiatingHashmap<Integer, DoubleArray>(){
