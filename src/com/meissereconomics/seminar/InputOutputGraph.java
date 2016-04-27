@@ -13,9 +13,6 @@ import java.util.function.BiConsumer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.math3.stat.descriptive.moment.Mean;
-import org.apache.commons.math3.util.DoubleArray;
-import org.apache.commons.math3.util.ResizableDoubleArray;
 
 import com.meissereconomics.seminar.util.InstantiatingHashmap;
 
@@ -106,21 +103,20 @@ public class InputOutputGraph {
 	public void collapseRandomSectors(int seed, int i) {
 		collapseRandomSectors(seed, i, null);
 	}
-		
-
+	
 	public void collapseRandomSectors(int seed, int i, BiConsumer<Node, Node> mergeListener) {
 		for (Country c : countries.values()) {
 			seed += 131313;
-			c.collapseRandomSectors(seed, i, mergeListener);
+			c.collapseRandomSectors(seed, i);
 		}
 	}
 
-	public void deriveOrigins() {
+	public void deriveOrigins(double consumptionPreference) {
 		double difference = 1.0;
 		while (difference >= 0.005) {
 			difference = 0.0;
 			for (Country c : countries.values()) {
-				difference = Math.max(c.calculateComposition(), difference);
+				difference = Math.max(c.calculateComposition(consumptionPreference), difference);
 			}
 			for (Country c : countries.values()) {
 				c.updateComposition();

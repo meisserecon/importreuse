@@ -23,6 +23,7 @@ public class Composition {
 	public Composition(Country country, double value) {
 		this.home = country;
 		this.shares = HashObjDoubleMaps.newMutableMap();
+		assert!Double.isNaN(value);
 		this.shares.put(country, value);
 		this.normalized = false;
 	}
@@ -36,7 +37,9 @@ public class Composition {
 			@Override
 			public void accept(Country t, double u) {
 				double current = Composition.this.getShare(t);
-				Composition.this.shares.put(t, current + u * value);
+				double newValue = current + u * value;
+				assert!Double.isNaN(newValue);
+				Composition.this.shares.put(t, newValue);
 			}
 		});
 	}
@@ -54,6 +57,7 @@ public class Composition {
 
 			@Override
 			public double applyAsDouble(Country a, double b) {
+				assert sum[0] > 0.0;
 				return b / sum[0];
 			}
 		});
@@ -69,7 +73,11 @@ public class Composition {
 	}
 
 	public double getImportReuse() {
-		return 1.0 - shares.getDouble(home);
+		if (normalized) {
+			return 1.0 - shares.getDouble(home);
+		} else {
+			return Double.NaN;
+		}
 	}
 
 	public double getShare(Country key) {
@@ -80,7 +88,21 @@ public class Composition {
 
 	@Override
 	public String toString() {
-		return getImportReuse() + "\timport reuse";
+		return normalized ? getImportReuse() + "\timport reuse" : shares.toString();
+	}
+
+	public void redirectDomesticInputs(double consumption, double degree) {
+		assert!normalized;
+		double domestic = shares.getDouble(home);
+		if (consumption > domestic) {
+			// System.out.println("x");
+		}
+		double share = domestic - consumption * degree;
+		if (share <= 0.0) {
+			shares.removeAsDouble(home);
+		} else {
+			shares.put(home, share);
+		}
 	}
 
 }

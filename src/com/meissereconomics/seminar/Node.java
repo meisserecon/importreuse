@@ -11,7 +11,6 @@ import org.apache.commons.math3.util.ResizableDoubleArray;
 
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMap;
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;
-import net.openhft.koloboke.collect.map.hash.HashObjObjMaps;
 
 public class Node {
 
@@ -38,8 +37,21 @@ public class Node {
 		this.outputs = HashObjDoubleMaps.newMutableMap();
 	}
 
-	public double calculateComposition() {
+	public void forEachLocalInputs(ObjDoubleConsumer<Node> consumer) {
+		this.inputs.forEach(new ObjDoubleConsumer<Node>() {
+
+			@Override
+			public void accept(Node t, double value) {
+				if (t.country == Node.this.country) {
+					consumer.accept(t, value);
+				}
+			}
+		});
+	}
+
+	public double calculateComposition(Node consumption, double localConsumptionPreference) {
 		double value = Math.max(0, getCreatedValue());
+
 		Composition comp = new Composition(country, value);
 		inputs.forEach(new ObjDoubleConsumer<Node>() {
 
@@ -48,10 +60,19 @@ public class Node {
 				comp.include(t.getOrigin(), value);
 			}
 		});
+		comp.redirectDomesticInputs(outputs.getDouble(consumption), localConsumptionPreference);
 		comp.normalize();
 		double difference = comp.diff(origin);
 		this.next = comp;
 		return difference;
+	}
+
+	protected double shortWireConsumption(Node consumption, double localConsumptionPreference) {
+		double value = Math.max(0, getCreatedValue());
+		double localConsumption = outputs.getDouble(consumption);
+		double preferentialFlow = localConsumptionPreference * Math.min(localConsumption, value);
+		value -= preferentialFlow;
+		return value;
 	}
 
 	public void updateComposition() {
@@ -81,16 +102,6 @@ public class Node {
 		assert other != this;
 		double valueAdded = getCreatedValue();
 		double otherValue = other.getCreatedValue();
-		// report(reporting, valueAdded / (valueAdded + otherValue), false, other);
-		// this.outputs.forEach(new ObjDoubleConsumer<Node>() {
-		//
-		// @Override
-		// public void accept(Node t, double value) {
-		// if (!other.outputs.containsKey(t)) {
-		// report(reporting, 1.0, true, t);
-		// }
-		// }
-		// });
 		absorbSelfReferences(other);
 		other.outputs.forEach(new ObjDoubleConsumer<Node>() {
 
@@ -103,20 +114,10 @@ public class Node {
 				double additional = othersDestination.inputs.remove(other);
 				assert additional == value;
 				double sum = existing + additional;
-				// report(reporting, existing / sum, true, othersDestination);
 				othersDestination.inputs.put(Node.this, sum);
 				Node.this.outputs.put(othersDestination, sum);
 			}
 		});
-		// this.inputs.forEach(new ObjDoubleConsumer<Node>() {
-		//
-		// @Override
-		// public void accept(Node t, double value) {
-		// if (!other.inputs.containsKey(t)) {
-		// report(reporting, 1.0, false, t);
-		// }
-		// }
-		// });
 		other.inputs.forEach(new ObjDoubleConsumer<Node>() {
 
 			@Override
@@ -128,7 +129,6 @@ public class Node {
 				double additional = othersSource.outputs.remove(other);
 				assert additional == value;
 				double sum = existing + additional;
-				// report(reporting, existing / sum, false, othersSource);
 				othersSource.outputs.put(Node.this, sum);
 				Node.this.inputs.put(othersSource, sum);
 			}
@@ -153,16 +153,6 @@ public class Node {
 		outputs.put(this, sum);
 	}
 
-	// protected void report(int reporting, double ownShare, boolean export, Node other) {
-	// if (reporting == 23) {
-	// boolean domestic = country.equals(other.country);
-	// boolean consumption = this.isConsumption() || other.isConsumption();
-	// if (!consumption) {
-	// // System.out.println(reporting + "\t" + ownShare + "\t" + (export ? 1 : 0) + "\t" + (domestic ? 1 : 0) + "\t" + (consumption ? 1 : 0));
-	// }
-	// }
-	// }
-
 	public double getCreatedValue() {
 		return getOutputs() - getInputs();
 	}
@@ -172,9 +162,18 @@ public class Node {
 	}
 
 	public void linkTo(Node node, double millions) {
-		assert !this.outputs.containsKey(node);
+		assert!Double.isNaN(millions);
+		assert!this.outputs.containsKey(node);
 		this.outputs.put(node, millions);
-		assert !node.inputs.containsKey(this);
+		assert!node.inputs.containsKey(this);
+		node.inputs.put(this, millions);
+	}
+
+	public void updateLink(Node node, double millions) {
+		assert millions > 0;
+		assert this.outputs.containsKey(node);
+		assert node.inputs.containsKey(this);
+		this.outputs.put(node, millions);
 		node.inputs.put(this, millions);
 	}
 
@@ -257,6 +256,10 @@ public class Node {
 		return country + " " + industry;
 	}
 
+	public String getDescription() {
+		return country + " " + industry + " importing " + getImports() + " and exporting " + getExports() + " out of which " + getReusedImports() + " is reused";
+	}
+
 	public double getDomesticConsumption() {
 		for (Node n : outputs.keySet()) {
 			if (n.isConsumption() && n.getCountry() == country) {
@@ -266,6 +269,10 @@ public class Node {
 		return 0.0;
 	}
 
+	/**
+	 * Returns the relative input or output shares for all connections to other nodes, excluding self-connections and connections between this and other.
+	 * 
+	 */
 	public DoubleArray[] getRelativeShares(final Node other, final boolean input) {
 		assert!isConsumption();
 		assert!other.isConsumption();
@@ -279,9 +286,11 @@ public class Node {
 
 			@Override
 			public void accept(Node t, double value) {
-				double othersValue = (input ? other.inputs : other.outputs).getDouble(t);
-				double share = value / (value + othersValue);
-				getTarget(t).addElement(Math.min(1.0, share));
+				if (t != Node.this && t != other) {
+					double othersValue = (input ? other.inputs : other.outputs).getDouble(t);
+					double share = value / (value + othersValue);
+					getTarget(t).addElement(Math.min(1.0, share));
+				}
 			}
 
 			private DoubleArray getTarget(Node t) {
@@ -298,7 +307,7 @@ public class Node {
 		});
 		// all the sectors we are not connected to but the other node is
 		for (Node t : (input ? other.inputs : other.outputs).keySet()) {
-			if (!myMap.containsKey(t)) {
+			if (!myMap.containsKey(t) && t != other && t != this) {
 				boolean sameCountry = t.country == country;
 				if (sameCountry) {
 					(t.isConsumption() ? domesticConsumption : domestic).addElement(0.0);
@@ -319,6 +328,10 @@ public class Node {
 	public boolean equals(Object o) {
 		Node ok = (Node) o;
 		return country == ok.country && industry.equals(ok.industry);
+	}
+
+	public double getOutput(Node n1) {
+		return outputs.getDouble(n1);
 	}
 
 }
