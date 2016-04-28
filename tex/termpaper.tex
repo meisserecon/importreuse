@@ -16,7 +16,7 @@
 \begin{document}
 
 %% Titelei
-\title{The Import Content of Exports is Higher than the Leontief Inverse Suggests}
+\title{The Import Content of Exports is Usually Higher than the Leontief Inverse Suggests}
 
 %\subtitle{}
 
@@ -26,16 +26,32 @@
 
 \maketitle
 
-\emph{The Leontief inverse is the most popular tool to calculate the import reuse of exports from given input-output tables. However, because it implicitely assumes proportional use of inputs, it yields wrong results when applying it to aggregate sector data when the import intensities and export intensities of sectors beyond the resolution of the data are correlated, which usually is the case. Using data from the World Input-Output Database (WIOD), the Leontief inverse suggests a global import reuse of only 17\%  when based on one single aggregate sector per country, but results in much higher 24\% when based on all the 35 distinct sectors available in WIOD. Considering the plausible bounds and simulating further disaggregation beyond the resolution of the database under the assumption of self-similarity, I guess the true import content of exports to be even higher, namely around XX\% at average.}
+\emph{The Leontief inverse is the most popular tool to calculate the import reuse of exports from given input-output tables. Unfortunately, it yields wrong results when the inputs of sectors are not proportionally used for the production of their outputs, which usually is the case. As a consequene, input reuse as calculated by the Leontief inverse depends on the resolution of the underlying data, monotonically increasing from 17\% to 24\% globally as the resolution is increased from one aggregate to 35 sectors per country. To address this problem, I postulate a hidden variable 'gravity of local consumption' and introduce a scale-invariant calculation method to estimate the true import reuse under the assumption of self-similarity, resulting in about 32\% globally.}
 
 \section{Introduction}
 Import reuse, sometimes also called the import content of exports, is a basic metric that is typically derived from input-output tables and often serves as an intermediate step for more elaborate calculations, for example as a contributing factor when estimating exchange-rate pass-through. It measures the extent to which exports consist of previous imports. Its usual method of calculation is to derive the composition of exports by applying the Leontief inverse to the input-output table of the exporting country. \ref{OECD} More accurate results are achieved when basing the calculation on a worldwide input-output table such as WIOD, as this allows to account for circular flows of goods between country. \ref{Auer}
 
-The subtle problem with this traditional approach is that the Leontief inverse implicitely assumes proportional use of inputs. In practice, however, firms that import much also tend to export much. \ref{Amiti} When aggregating such firms together with firms that have low import intensity, information about the actual use of specific imports gets lost and the import reuse as calculated by the Leontief inverse decreases. Thus, when the import intensity and the export intensity of sectors beyond the resolution of the data at hand are correlated, the Leontief inverse systematically underestimates import reuse.
+The subtle problem with this traditional approach is that the Leontief inverse implicitely assumes proportional use of inputs. In practice, however, firms that import much also tend to export much. \ref{Amiti} When aggregating such firms together with firms that have low import intensity, information about the actual use of specific imports gets lost and the import reuse as calculated by the Leontief inverse decreases. Thus, when the import intensity and the export intensity of sectors beyond the resolution of the data at hand are positively correlated, the Leontief inverse systematically underestimates import reuse. This is the case for all the 42 countries present in the WIOD database, except for Russia, which exhibits a negative correlation.
 
 After illustrating how strongly the reported import reuse depends on the resolution of the data, I construct a simple heuristic to artificially increase the resolution, thereby allowing to better estimate the true import reuse under the assumption of self-similarity between sectors at different resolutions. The source code of the used computer program is provided in a public repository\footnote{\href{https://github.com/kronrod/importreuse}{github.com/kronrod/importreuse}, with more detailed instructions in the repository itself.}, allowing anyone skilled in the art to reproduce these results within minutes and to calculate import reuse more accurately on their own datasets.
 
 Subsequent section \ref{sec:data} describes the used data. It is followed by a detailed description of ...
+
+
+Koopman, Robert, Zhi Wang, and Shang-Jin Wei. "Estimating domestic content in exports when processing trade is pervasive." Journal of development economics 99.1 (2012): 178-189.
+Recognize short-comings of Leontief Inverse, manually introduce extra nodes to separate imports that are sent abroad again, which they call ‘processing trade’. Estimate China to have 50% import reuse in manufactured exports, and 60% before joining WTO.
+
+Seminal paper with 2600 citations:
+Hummels, David, Jun Ishii, and Kei-Mu Yi. "The nature and growth of vertical specialization in world trade." Journal of international Economics 54.1 (2001): 75-96.
+Take into account back-and-forth flows between countries. The vertical specialisation (VS) share of world trade is about 25% (another name of import content of exports).
+Matrix view, apply leontief inverse.
+Problematic: varying numbers of sectors across time (?), page 27
+
+
+The literature on vertical trade aims at measuring sequential trade in vertical production chains by looking at the import content of exports.
+"Mexico’s manufacturing exports have a foreign content share of approximately 66%". Uses "foreign value added" as another term of import reuse. Also "value added of trade".
+Literature World Bank Collection.pdf
+
 
 
 \section{Data}
@@ -79,6 +95,9 @@ When splitting a node $c$ into two new nodes $a$ and $b$, all edges that contain
 
 
 \subsection{Results}
+
+Russia's import reuse goes down as resolution is increased, the others go up. Producer of raw inputs that must be sent abroad for making consumption goods?
+
 Figure of how global import reuse grows as the number of sectors is increased.\\
 Table of import content by country as estimated by Leontief inverse on 10 sectors, 35 sectors, and many simulated sectors.\\
 

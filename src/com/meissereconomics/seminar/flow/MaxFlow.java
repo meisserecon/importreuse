@@ -16,18 +16,26 @@ public class MaxFlow {
 	private Node source, target;
 	private DefaultDirectedWeightedGraph<Node, DefaultEdge> graph;
 
-	public MaxFlow(Country c) {
+	public MaxFlow(Country c, boolean imports) {
 		graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
 		ArrayList<Node> list = c.getNodeList();
-		this.source = new Node(c, "Value Creation");
-		this.graph.addVertex(source);
-		this.target = list.get(0);
+		if (imports){
+			this.source = new Node(c, "Imports");
+			this.target = new Node(c, "Exports");
+			this.graph.addVertex(source);
+			this.graph.addVertex(target);
+		} else {
+			this.source = new Node(c, "Value Creation");
+			this.graph.addVertex(source);
+			this.target = list.get(0);
+		}
 		for (Node n : list) {
 			graph.addVertex(n);
 		}
 		for (Node n : list) {
 			if (n != target) {
-				graph.setEdgeWeight(graph.addEdge(source, n), n.getCreatedValue());
+				double weight = imports ? n.getImports() : n.getCreatedValue();
+				graph.setEdgeWeight(graph.addEdge(source, n), weight);
 			}
 			n.forEachLocalInputs(new ObjDoubleConsumer<Node>() {
 
@@ -37,6 +45,9 @@ public class MaxFlow {
 					graph.setEdgeWeight(graph.addEdge(t, n), value);
 				}
 			});
+			if (imports){
+				graph.setEdgeWeight(graph.addEdge(n, target), n.getExports());
+			}
 		}
 	}
 

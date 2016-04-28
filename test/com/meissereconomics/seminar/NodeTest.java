@@ -4,15 +4,13 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.meissereconomics.seminar.flow.MaxFlow;
-
 public class NodeTest {
-	
+
 	private static final String CON = Node.CONSUMPTION_TYPES[0];
 	private static final String CAR = "Car";
 	private static final String COM = "Computers";
 	private static final String WAT = "Water";
-	
+
 	private static final double ACCURACY = 0.000001;
 
 	@Test
@@ -29,22 +27,32 @@ public class NodeTest {
 			assert Math.abs(reuse1 - reuse2) / reuse2 < ACCURACY * 10;
 		}
 	}
-	
+
 	@Test
 	public void testFlow() {
-		Country[] cs = createCountries();
-		MaxFlow max = new MaxFlow(cs[0]);
-		System.out.println(max.calculateMaxFlow());
+		Country c = createCountries()[0];
+		double maxDomesticConsumption = c.getMaxDomesticFlow(false);
+		double maxImportReuse = c.getMaxDomesticFlow(true);
+		System.out.println(maxDomesticConsumption);
+		System.out.println(maxImportReuse);
+		assert equals(c.getImports() + c.getCreatedValue(), c.getExports() + c.getConsumption());
+		assert equals(c.getExports() - (c.getCreatedValue() - maxDomesticConsumption), maxImportReuse);
+		c.deriveOrigins(EFlowBendingMode.BOTH, 1.0);
+		assert equals(maxImportReuse, c.getReusedImports());
+	}
+
+	private boolean equals(double d, double e) {
+		return Math.abs(d - e) < 0.001;
 	}
 
 	private void calculateComposition(Country[] cs, int sectors) {
-		for (Country c: cs){
+		for (Country c : cs) {
 			c.collapseRandomSectors(13, sectors);
 		}
 		double diff = 1.0;
-		while (diff > ACCURACY){
-			for (Country c: cs){
-				diff = c.calculateComposition(0.0);
+		while (diff > ACCURACY) {
+			for (Country c : cs) {
+				diff = c.calculateComposition(EFlowBendingMode.BOTH, 0.0);
 				c.updateComposition();
 			}
 		}
@@ -84,7 +92,7 @@ public class NodeTest {
 		assert c1.getImports() == c2.getExports();
 		assert c1.getImports() == c2.getImports();
 		assert c1.getImports() == c1.getExports();
-		return new Country[]{c1, c2};
+		return new Country[] { c1, c2 };
 	}
 
 }

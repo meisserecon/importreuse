@@ -9,6 +9,8 @@ import java.util.function.ToDoubleFunction;
 import org.apache.commons.math3.util.DoubleArray;
 import org.apache.commons.math3.util.ResizableDoubleArray;
 
+import com.meissereconomics.seminar.util.Formatter;
+
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMap;
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;
 
@@ -49,7 +51,7 @@ public class Node {
 		});
 	}
 
-	public double calculateComposition(Node consumption, double localConsumptionPreference) {
+	public double calculateComposition(Node consumption, EFlowBendingMode mode, double localConsumptionPreference) {
 		double value = Math.max(0, getCreatedValue());
 
 		Composition comp = new Composition(country, value);
@@ -60,7 +62,7 @@ public class Node {
 				comp.include(t.getOrigin(), value);
 			}
 		});
-		comp.redirectDomesticInputs(outputs.getDouble(consumption), localConsumptionPreference);
+		comp.redirectDomesticInputs(outputs.getDouble(consumption), mode, localConsumptionPreference);
 		comp.normalize();
 		double difference = comp.diff(origin);
 		this.next = comp;
@@ -253,7 +255,18 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return country + " " + industry;
+		String s1 = Formatter.toTabs(country, industry, getImports(), getExports(), getCreatedValue());
+		s1 += "\tINPUTS:";
+		for (Map.Entry<Node, Double> e : inputs.entrySet()) {
+			if (e.getKey().country == country) {
+				s1 += "\t" + e.getKey().industry + "\t" + e.getValue();
+			}
+		}
+		// s1 += "\tOUTPUTS:";
+		// for (Map.Entry<Node, Double> e : outputs.entrySet()) {
+		// s1 += "\t" + e.getKey() + "\t" + e.getValue();
+		// }
+		return s1;
 	}
 
 	public String getDescription() {

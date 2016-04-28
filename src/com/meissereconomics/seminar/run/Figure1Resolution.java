@@ -9,6 +9,7 @@ import org.apache.commons.math3.stat.descriptive.moment.Variance;
 import org.apache.commons.math3.util.DoubleArray;
 import org.apache.commons.math3.util.ResizableDoubleArray;
 
+import com.meissereconomics.seminar.EFlowBendingMode;
 import com.meissereconomics.seminar.InputOutputGraph;
 import com.meissereconomics.seminar.util.InstantiatingHashmap;
 
@@ -35,7 +36,7 @@ public class Figure1Resolution {
 			InputOutputGraph iograph = new InputOutputGraph("data/wiot05_row_apr12.CSV");
 			for (int level = InputOutputGraph.SECTORS; level > 0; level--) {
 				iograph.collapseRandomSectors(run * 31, level);
-				iograph.deriveOrigins(0.0);
+				iograph.deriveOrigins(EFlowBendingMode.BOTH, 0.0);
 				double reuse = iograph.getGlobalImportReuse();
 				inputReuse.obtain(level).addElement(reuse);
 			}

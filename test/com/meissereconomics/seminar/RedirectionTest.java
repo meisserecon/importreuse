@@ -21,10 +21,10 @@ public class RedirectionTest {
 		stage3.linkTo(other.getConsumptionNode(), 100);
 		double diff = 1.0;
 		while (diff >= 0.001){
-			diff = home.calculateComposition(1.0);
+			diff = home.calculateComposition(EFlowBendingMode.BOTH, 1.0);
 			home.updateComposition();
 		}
-		double reuse = home.getReusedImports();
+		double reuse = home.getReusedImports() / home.getExports();
 		assert reuse >= 0.999;
 		
 	}

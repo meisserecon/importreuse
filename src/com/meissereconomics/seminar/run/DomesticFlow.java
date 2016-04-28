@@ -29,7 +29,7 @@ public class DomesticFlow {
 			iograph.collapseRandomSectors(13, level);
 			System.out.print(level);
 			for (Country c : iograph.getCountries()) {
-				System.out.print("\t" + c.getMaxDomesticFlow());
+				System.out.print("\t" + c.getMaxDomesticFlow(true));
 			}
 			System.out.println();
 		}

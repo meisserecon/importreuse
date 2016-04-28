@@ -11,6 +11,7 @@ public class Composition {
 
 	private Country home;
 	private boolean normalized;
+	private double directConsumption;
 	private HashObjDoubleMap<Country> shares;
 
 	public Composition(Country country) {
@@ -18,6 +19,7 @@ public class Composition {
 		this.shares.put(country, 1.0);
 		this.home = country;
 		this.normalized = true;
+		this.directConsumption = 0.0;
 	}
 
 	public Composition(Country country, double value) {
@@ -26,6 +28,7 @@ public class Composition {
 		assert!Double.isNaN(value);
 		this.shares.put(country, value);
 		this.normalized = false;
+		this.directConsumption = 0.0;
 	}
 
 	public void include(Composition source, double value) {
@@ -91,13 +94,11 @@ public class Composition {
 		return normalized ? getImportReuse() + "\timport reuse" : shares.toString();
 	}
 
-	public void redirectDomesticInputs(double consumption, double degree) {
+	public void redirectDomesticInputs(double consumption, EFlowBendingMode mode, double degree) {
 		assert!normalized;
 		double domestic = shares.getDouble(home);
-		if (consumption > domestic) {
-			// System.out.println("x");
-		}
-		double share = domestic - consumption * degree;
+		this.directConsumption = mode.calculate(consumption, domestic, degree);
+		double share = domestic - directConsumption;
 		if (share <= 0.0) {
 			shares.removeAsDouble(home);
 		} else {

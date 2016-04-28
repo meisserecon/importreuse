@@ -69,10 +69,10 @@ public class Country implements Comparable<Country> {
 		return getNodeList().stream().filter(n -> n.isConsumption()).mapToDouble(Node::getInputs).sum();
 	}
 
-	public double calculateComposition(double consumptionPreference) {
+	public double calculateComposition(EFlowBendingMode mode, double consumptionPreference) {
 		double diff = 0.0;
 		for (Node n : getNodeList()) {
-			diff = Math.max(diff, n.calculateComposition(getConsumptionNode(), consumptionPreference));
+			diff = Math.max(diff, n.calculateComposition(getConsumptionNode(), mode, consumptionPreference));
 		}
 		return diff;
 	}
@@ -85,7 +85,7 @@ public class Country implements Comparable<Country> {
 
 	public void mergeConsumption() {
 		Node consumption = new Node(this, Node.CONSUMPTION_TYPES[0]);
-		assert !nodes.containsKey(consumption.getIndustry());
+		assert!nodes.containsKey(consumption.getIndustry());
 		Iterator<Node> iter = nodes.values().iterator();
 		double exp = getExports();
 		while (iter.hasNext()) {
@@ -188,12 +188,28 @@ public class Country implements Comparable<Country> {
 		}
 	}
 
-	public double getMaxDomesticFlow() {
-		return new MaxFlow(this).calculateMaxFlow();
+	public double getMaxDomesticFlow(boolean imports) {
+		return new MaxFlow(this, imports).calculateMaxFlow();
 	}
-
+	
 	public Node getConsumptionNode() {
 		return getNode(Node.CONSUMPTION_TYPES[0]);
+	}
+
+	public void deriveOrigins(EFlowBendingMode mode, double consumptionPreference) {
+		double difference = 1.0;
+		while (difference >= 0.001) {
+			difference = calculateComposition(mode, consumptionPreference);
+			updateComposition();
+		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public double getImportReuse() {
+		return getReusedImports() / getExports();
 	}
 
 }

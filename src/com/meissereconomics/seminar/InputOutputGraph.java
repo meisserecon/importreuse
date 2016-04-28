@@ -111,17 +111,16 @@ public class InputOutputGraph {
 		}
 	}
 
-	public void deriveOrigins(double consumptionPreference) {
+	public void deriveOrigins(EFlowBendingMode mode, double consumptionPreference) {
 		double difference = 1.0;
 		while (difference >= 0.005) {
 			difference = 0.0;
 			for (Country c : countries.values()) {
-				difference = Math.max(c.calculateComposition(consumptionPreference), difference);
+				difference = Math.max(c.calculateComposition(mode, consumptionPreference), difference);
 			}
 			for (Country c : countries.values()) {
 				c.updateComposition();
 			}
-			// System.out.println("Max Difference " + difference);
 		}
 	}
 
