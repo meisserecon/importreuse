@@ -5,14 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.math3.stat.correlation.Covariance;
-import org.apache.commons.math3.stat.descriptive.moment.Mean;
-import org.apache.commons.math3.stat.descriptive.moment.Variance;
 
 import com.meissereconomics.seminar.Country;
 import com.meissereconomics.seminar.EFlowBendingMode;
 import com.meissereconomics.seminar.InputOutputGraph;
 import com.meissereconomics.seminar.util.Formatter;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import net.openhft.koloboke.collect.map.ObjDoubleMap;
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;
@@ -29,40 +26,42 @@ public class BendingByCountry {
 	private InputOutputGraph[] graphs;
 	private ObjDoubleMap<String> bendings;
 
-	public BendingByCountry() throws FileNotFoundException, IOException {
+	public BendingByCountry(String file) throws FileNotFoundException, IOException {
+		System.out.println("Processing file " + file);
 		this.levels = new double[InputOutputGraph.SECTORS];
-		this.graphs = new InputOutputGraph[InputOutputGraph.SECTORS];
+		this.graphs = new InputOutputGraph[1]; // TEMP InputOutputGraph.SECTORS];
 		for (int i = 0; i < graphs.length; i++) {
 			this.levels[i] = i + 1.0;
-			this.graphs[i] = new InputOutputGraph("data/wiot05_row_apr12.CSV");
-			this.graphs[i].collapseRandomSectors(i * 31, i + 1);
-			this.graphs[i].deriveOrigins(MODE, DEFAULT_BENDING);
-			System.out.println("Initialized level " + levels[i] + ", used " + Runtime.getRuntime().totalMemory() + " of " + Runtime.getRuntime().maxMemory());
+			this.graphs[i] = new InputOutputGraph(file);
+//			this.graphs[i].collapseRandomSectors(i * 31, i + 1);
+//			this.graphs[i].deriveOrigins(MODE, DEFAULT_BENDING);
+//			System.out.println("Initialized level " + levels[i] + ", used " + Runtime.getRuntime().totalMemory() + " of " + Runtime.getRuntime().maxMemory());
 		}
 		this.bendings = HashObjDoubleMaps.newMutableMap();
 		for (Country c : graphs[0].getCountries()) {
 			this.bendings.put(c.getName(), DEFAULT_BENDING);
 		}
-		System.out.println("Initialization complete");
+//		System.out.println("Initialization complete");
 	}
 
 	public void optimizeAll() {
-		for (String country : bendings.keySet()) {
-			optimizeCountry(country);
-		}
+//		for (String country : bendings.keySet()) {
+//			optimizeCountry(country);
+//		}
 	}
 
 	public void printAll() {
-		System.out.println("Country\tBending\tReuse\tVariance\tCovariance");
+//		System.out.println("Country\tBending\tReuse\tVariance\tCovariance");
 		ArrayList<String> countries = new ArrayList<>(bendings.keySet());
 		java.util.Collections.sort(countries);
 		for (String country : countries) {
-			double bending = bendings.getDouble(country);
-			double[] reuses = calculateReuse(country);
-			double reuse = new Mean().evaluate(reuses);
-			double variance = new Variance().evaluate(reuses);
-			double covariance = new Covariance().covariance(levels, reuses);
-			System.out.println(Formatter.toTabs(country, bending, reuse, variance, covariance));
+//			double bending = bendings.getDouble(country);
+//			double[] reuses = calculateReuse(country);
+//			double reuse = new Mean().evaluate(reuses);
+//			double variance = new Variance().evaluate(reuses);
+//			double covariance = new Covariance().covariance(levels, reuses);
+//			System.out.println(Formatter.toTabs(country, bending, reuse, variance, covariance));
+			System.out.println(Formatter.toTabs(country, graphs[0].getCountry(country).getExports(), graphs[0].getCountry(country).getImports(), graphs[0].getCountry(country).getConsumption(), graphs[0].getCountry(country).getMaxDomesticFlow(true)));
 		}
 	}
 
@@ -135,9 +134,30 @@ public class BendingByCountry {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		BendingByCountry bendings = new BendingByCountry();
-		bendings.optimizeAll();
-		bendings.printAll();
+		for (int year = 95; year <= 99; year++) {
+			String file = "data/wiot" + year + "_row_apr12.csv";
+			BendingByCountry bendings = new BendingByCountry(file);
+			bendings.optimizeAll();
+			bendings.printAll();
+		}
+		for (int year = 0; year <= 7; year++) {
+			String file = "data/wiot0" + year + "_row_apr12.csv";
+			BendingByCountry bendings = new BendingByCountry(file);
+			bendings.optimizeAll();
+			bendings.printAll();
+		}
+		for (int year = 8; year <= 9; year++) {
+			String file = "data/wiot0" + year + "_row_sep12.csv";
+			BendingByCountry bendings = new BendingByCountry(file);
+			bendings.optimizeAll();
+			bendings.printAll();
+		}
+		for (int year = 10; year <= 11; year++) {
+			String file = "data/wiot" + year + "_row_sep12.csv";
+			BendingByCountry bendings = new BendingByCountry(file);
+			bendings.optimizeAll();
+			bendings.printAll();
+		}
 	}
 
 }
