@@ -1,0 +1,34 @@
+%Filename: 8rpfr.fd
+%Created by: tex fontinst
+%Created using fontinst v1.801
+
+%THIS FILE SHOULD BE PUT IN A TEX INPUTS DIRECTORY
+
+\ProvidesFile{8rpfr.fd}
+   [2002/03/12 Fontinst v1.801 font definitions for 8r/pfr.]
+
+\DeclareFontFamily{8r}{pfr}{}
+
+\DeclareFontShape{8r}{pfr}{m}{n}{
+   <-> pfrr8r
+}{}
+
+\DeclareFontShape{8r}{pfr}{m}{sl}{
+   <-> pfrro8r
+}{}
+
+\DeclareFontShape{8r}{pfr}{b}{n}{
+   <-> pfrb8r
+}{}
+
+\DeclareFontShape{8r}{pfr}{b}{sl}{
+   <-> pfrbo8r
+}{}
+
+\DeclareFontShape{8r}{pfr}{m}{it}{<->ssub * pfr/m/sl}{}
+\DeclareFontShape{8r}{pfr}{bx}{n}{<->ssub * pfr/b/n}{}
+\DeclareFontShape{8r}{pfr}{bx}{sl}{<->ssub * pfr/b/sl}{}
+\DeclareFontShape{8r}{pfr}{b}{it}{<->ssub * pfr/b/sl}{}
+\DeclareFontShape{8r}{pfr}{bx}{it}{<->ssub * pfr/b/it}{}
+
+\endinput

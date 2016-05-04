@@ -1,9 +1,11 @@
-\documentclass[english]{uzhpub}
+\documentclass{paper}
 \usepackage[T1]{fontenc}
-\usepackage[latin9]{inputenc}
+%\usepackage[latin9]{inputenc}
 \usepackage{url}
 \usepackage{hyperref}
 \usepackage{epstopdf}
+\usepackage{graphicx}
+\usepackage{natbib}
 
 \hypersetup{
     colorlinks=true,
@@ -16,7 +18,7 @@
 \begin{document}
 
 %% Titelei
-\title{The Import Content of Exports is Usually Higher than the Leontief Inverse Suggests}
+\title{A scale-invariant calculation of import contents of exports}
 
 %\subtitle{}
 
@@ -26,7 +28,7 @@
 
 \maketitle
 
-\emph{The Leontief inverse is the most popular tool to calculate the import reuse of exports from given input-output tables. Unfortunately, it yields wrong results when the inputs of sectors are not proportionally used for the production of their outputs, which usually is the case. As a consequene, input reuse as calculated by the Leontief inverse depends on the resolution of the underlying data, monotonically increasing from 17\% to 24\% globally as the resolution is increased from one aggregate to 35 sectors per country. To address this problem, I postulate a hidden variable 'gravity of local consumption' and introduce a scale-invariant calculation method to estimate the true import reuse under the assumption of self-similarity, resulting in about 32\% globally.}
+\emph{The most popular tool to calculate import content of exports (also known as ...) from given reuse of exports from given input-output tables. Unfortunately, it yields wrong results when the inputs of sectors are not proportionally used for the production of their outputs, which usually is the case. As a consequene, input reuse as calculated by the Leontief inverse depends on the resolution of the underlying data, monotonically increasing from 17\% to 24\% globally as the resolution is increased from one aggregate to 35 sectors per country. To address this problem, I postulate a hidden variable 'gravity of local consumption' and introduce a scale-invariant calculation method to estimate the true import reuse under the assumption of self-similarity, resulting in about 32\% globally.}
 
 \section{Introduction}
 Import reuse, sometimes also called the import content of exports, is a basic metric that is typically derived from input-output tables and often serves as an intermediate step for more elaborate calculations, for example as a contributing factor when estimating exchange-rate pass-through. It measures the extent to which exports consist of previous imports. Its usual method of calculation is to derive the composition of exports by applying the Leontief inverse to the input-output table of the exporting country. \ref{OECD} More accurate results are achieved when basing the calculation on a worldwide input-output table such as WIOD, as this allows to account for circular flows of goods between country. \ref{Auer}
@@ -52,55 +54,65 @@ The literature on vertical trade aims at measuring sequential trade in vertical 
 "Mexico’s manufacturing exports have a foreign content share of approximately 66%". Uses "foreign value added" as another term of import reuse. Also "value added of trade".
 Literature World Bank Collection.pdf
 
-
-
 \section{Data}
 \label{sec:data}
 \subsection{WIOD}
-Using WIOD data from 2011.\\
-Data coverage\\
-Summary statistics (number obs, means, variances)\\
+The world input-output database (WIOD) presented by \cite{timmer2012world} serves as data source. It covers 42 countries and 17 years starting from 1995 with a resolution of 40 sectors per country. Unlike national input-output tables, the WIOD tables contain disaggregate flows between the individual sectors of different country. For simplicity, I merge each country's destination sectors such as consumption and inventory changes into one node "consumption and capital formation" that is treated specially and generally not counted as a sector. I.e., when later reducing the number of sectors per country to one, there will actually be two nodes left per country, one active sector and the consumption node. Furthermore, I ignore negative flows into the consumption node\footnote{This can happen when capital is reduced or inventories decrease.} as they are negligible and not having negative edge weights is a prerequisite for the later applied Edmonds-Karp algorithm \cite{edmonds1972theoretical}. All other flows in WIOD are zero or positive.
+
 \subsection{Graph View}
 \label{sec:graphview}
-Usually, economists treat input-output tables as matrices. An equally valid and in this case more insightful view is to treat the input-output table as a weighted directed graph. Every square matrix can be represented as a weighted directed graph and a weighted directed graph can converted into a square matrix as long as there is at most one edge in each direction between each pair of nodes. In the graph representation of input-output tables, each node represents a sector in a country and is named accordingly. Each weighted edge $e=(a, b, w)$ represents a flow from node $a$ to node $b$ of volume or weight $w$, as illustrated in figure X. Flows from a node to itself are allowed.
+Usually, economists treat input-output tables as matrices. An equally valid and in this case more insightful view is to treat the input-output table as a weighted directed graph. Every square matrix can be represented as a weighted directed graph and a weighted directed graph can converted into a square matrix as long as there is at most one edge in each direction between each pair of nodes. In the graph representation of input-output tables, each node represents a sector in a country and is named accordingly. Each weighted edge $e=(a, b, w)$ represents a flow from node $a$ to node $b$ of volume or weight $w$. Flows from a node to itself are allowed and correspond to diagonal elements in the matrix view.
 
-When merging two nodes $a$ and $b$ of a graph into a new node $c$, the nodes $a$ and $b$ are replaced by $c$ in all edges and then all edges that connect the same nodes in the same direction aggregated into a single new edge whose weight is the sum of the old weights. This is equivalent to removing column $i$ and adding it to column $j$ in the matrix view, and then also removing row $i$ and adding it to row $j$, with $i$ and $j$ being the indices of the two sectors represented by nodes $a$ and $b$. When doing so, the indices of other sectors may change, making it less convenient to track a specific sector in the matrix view than in the graph view, where the names of unaffected nodes stay the same when others are merged.
-
-For simplicity, I merge each country's consumption types, capital formation, and inventory changes into one special node "consumption and capital accumulation" that is not counted as a sector. I.e., when later reducing the number of sectors per country to one, there will be two nodes left per country, one actual sector and the consumption node. Furthermore, I ignore negative flows into the consumption node\footnote{This can happen when capital is reduced or inventories decrease.} as they are negligible and not having negative edge weights is a prerequisite for some graph operations. All other flows in WIOD are zero or positive.
+When merging two nodes $a$ and $b$ of a graph into a new node $c$, the nodes $a$ and $b$ are replaced by $c$ in all edges and then all edges that connect the same nodes in the same direction aggregated into a single new edge whose weight is the sum of the old weights. This is equivalent to first removing column $i$ and adding it to column $j$ in the matrix view, and then also removing row $i$ and adding it to row $j$, with $i$ and $j$ being the indices of the two sectors represented by nodes $a$ and $b$. When doing so, the indices of other sectors may change, making it less convenient to track a specific sector in the matrix view than in the graph view, where the names of unaffected nodes stay the same when others are merged. Generally, the graph view is more compact than the matrix view when the matrix is sparse.
 
 \section{Empirical Part}
 
-\subsection{Plausible Bounds}
-Illustration of the possible extremes using a simple graphic. Description of how the possible bounds are calculated, i.e. the import reuse under the assumption that imports are reexported first in each sector, and then the rest used domestically (if anything left).
-
 \subsection{Varying the Sector Resolution}
-When applying the Leontief inverse, the resulting import reuse depends on the resolution of the underlying data. This can be nicely demonstrated by starting with the full resolution provided by WIOD, namely 35 sectors, and then gradually reducing the resolution by merging sectors one by one, until only one large sector is left in each country. The resulting relation between number of sectors per country and calculated import reuse is depicted in figure \ref{fig:resolution}.
+\label{Varying}
+The usual method to calculate input reuse is to apply the Leontief inverse to the input-output table. A known flaw of this approach is that it implicitly assumes proportional use of inputs.\footnote{This is \emph{not} what is usually called the proportionality assumption. The proportionality assumption in the context of input-output analysis usually means proportionally assigning an import like steel across the domestic sectors that use that import. Here, proportional use of inputs refers to proportionally assigning the inputs of a single sector to its outputs. To avoid confusion, I refer to the latter as \emph{proportional assignment}.} This should not be a problem for disaggregate data with atomic resolution, but when applied to aggregate data, the Leontief inverse is systematically biased with countries that prefer consuming domestic products over foreign products. The import reuse as calculated by the Leontief inverse usually grows as the resolution of the underlying data is increased, which is a strong hint that it cannot be trusted. In case of the WIOD data, world input reuse grows from 17\% to 24\% as the resolution is varied between one and thirty-five sectors, a result discussed in section \ref{res:varying}. Thus, the Leontief inverse is not scale-invariant. A scale-invariant computation method that is consistent across different resolutions would yield more credible results, which is exactly what will be constructed in the subsequent sections.
+
+\subsection{Maximum Flow}
+Given the input-output graph of a country, one can derive the minimum and maximum possible import reuse by computing the maximum amount of imports that can be directed towards domestic consumption (for the minimum) or towards foreign nodes as exports (for the maximum). This problem is known as the \emph{maximum flow problem} and can for example be solved with the Edmonds-Karp algorithm. \cite{edmonds1972theoretical} The true import reuse must lay within the calculated bounds, with the proportional variant being somewhere in between. Unfortunately, these bounds turn out to be so wide that they cannot provide much guidance as to where the true import reuse might be.
+
+\subsection{Domestic Consumption Preference}
+To seek for plausible values of import reuse within the given bounds, I introduce a parameter \emph{domestic consumption preference} $p_{dom} \in [0,1]$. It is defined as the fraction of domestic inputs of a sector that directly flows into domestic consumption, before proportionally distributing all the remaining flows.\footnote{To be more precise, the direct flow from sector $s$ to the consumption node before proportionally distributing the remaining flows is $max(w_{s,c}, p_{dom} (v_s + i_{dom,s}))$, with $w_{s,c}$ being the weight of the edge connecting $s$ to the consumption node $c$, $v_s$ being value creation of $s$, and $i_{dom,s}$ being the total value of the domestic inputs of $s$. As a prerequisite for calculating $i_{dom,s}$, the import contents of all inputs of $s$ must be known.} For example, if there are two firms in the beer sector of a country, one producing beer from domestic hops and one producing beer from imported hops, a positive domestic consumption preference indicates that the locals prefer to drink the former and export the latter, whereas the proportional assignment implies indifference.
+
+By exogenously varying $p_{dom}$, an interval of potential true values of import reuse can be explored, with $p_{dom}=0$ corresponding to the proportional assignment, and $p_{dom}=1$ being somewhere between the proportional result and the maximum flow result. It does not quite reach the maximum as merely redirecting the domestic flows of every node towards local consumption is not sufficient. In some cases, it is necessary to redirect locally created value through multiple nodes towards consumption, which is what maximum flow implies, but not $p_{dom}=1$ as defined above. In future research, it might be desirable to redefine domestic consumption preference such that it can cover the whole range given by the bounds of maximum flow, including negative values that would correspond to a preference for foreign goods. In the data at hand, this actually seems to be the case for Russia in some years. But for the time being, the definition at hand is broad enough.
+
+\subsection{Scale-Invariance}
+\label{met:scale-invariance}
+Equipped with a parameter to tune, one can try to find values of $p_{dom}$ that make the calculate import reuse scale-invariant. One can do this globally with one global $p_{dom}$, or nationally with a separate domestic consumption preference $p_{dom,c}$ for each country $c$. In both cases, the parameter is adjusted such that the covariance $cov(r, f)$ of resolution $r$ (the number of sectors per country) and resulting import reuse $f$ is minimized. I calculate these values iteratively simply by updating import contents in the worldwide input-output graph until the values stabilize.\footnote{This is done in script \href{https://github.com/kronrod/importreuse/blob/master/src/com/meissereconomics/seminar/run/BendingByCountry.java}{BendingByCountry}.}
+
+Being robust against the tested changes in resolution, the import reuse resulting from assuming the scale-invariant domestic consumption preference is more plausible than the one calculated with the proportional assignment of inputs. Under the assumption that it is also robust against changes in resolution beyond the limits of the data at hand, the calculated scale-invariant import reuse matches the true import reuse. This assumption is valid if the input-output graph is self-similar, i.e. if the network similarly structured at all scales. Given that a wide range of real-world networks exhibit self-similarity \cite{song2005self}, this might be the best possible estimate in the absence of more fine-grained data.
+
+\section{Results}
+
+\subsection{Varying the Resolution}
+\label{res:varying}
+
+Figure \ref{fig:varying} shows how the global import reuse calculated with the traditional method of applying the Leontief inverse depends on the resolution of the underlying data.\footnote{The raw data for this figure has been generated with script \href{https://github.com/kronrod/importreuse/blob/master/src/com/meissereconomics/seminar/run/Figure1Resolution.java}{Figure1Resolution}.} As the number of sectors is increased from one to the thirty-five, import reuse continuously climbs from 17\% to 24\%. This is a clear signal that the true global import reuse is higher than what is typically assumed.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.5]{../data/resolution}
-\caption{The calculated import reuse depends on the resolution of the underlying data. The plotted curve represents the average of 100 randomized runs. The standard deviation of each plotted point is less than $10^{-5}$, so the curve can be considered free from visible random variation.} \label{fig:resolution}
+\includegraphics[scale=0.4]{../data/resolution}
+\caption{The calculated import reuse depends on the resolution of the underlying data. The plotted curve represents the average of 100 randomized runs and uses the data of 2005. The standard deviation of each plotted point is less than $10^{-5}$, so the curve can be considered free from visible random variation.} \label{fig:varying}
 \end{figure}
 
-The raw data for this figure has been generated with script \emph{Figure1Resolution}\footnote{\href{https://github.com/kronrod/importreuse/blob/master/src/com/meissereconomics/seminar/run/Figure1Resolution.java}{github.com/kronrod/importreuse/blob/master/src/com/meissereconomics/seminar/run/Figure1Resolution.java}}. It parses the 2005 world input-output table into a graph, calculates import reuse, and then reduces the number of sectors in each country by one. This is done by randomly selecting two sectors in each country and merging them as defined in section \ref{sec:graphview}. The reported import reuse is a global volume-weighted average of the import content of all exports. As the data is in graph form, import reuse is calculated by repeatedly updating the input composition of each node until all values have stabilized. This is equivalent to applying the Leontief inverse to the matrix view.
+The program to calculate the data behind figure \ref{fig:varying} first parses the given world input-output table into a graph, and then repeatedly calculates import reuse and reduces the number of sectors in each country by one. This is done by randomly selecting two sectors in each country and merging them as defined in section \ref{sec:graphview}. The reported import reuse is a global volume-weighted average of the import content of all exports, which in turn are calculated by repeatedly updating the input composition of each node until all values have converged towards a stable equilibrium. This latter step equivalent to applying the Leontief inverse to the matrix view.
 
-\subsection{Simulating Sector Splits}
-Splitting a sector in two is the reverse of merging two sectors into one. Unfortunately, merging sectors is not a reversible operation as information gets lost along the way. In order to simulate sector splits, a heuristic is needed to fill in the missing information, namely what share of the old weight of each replaced edge should be assigned to the first new edge, and what share to the second. In the given context, it does not matter whether these simulated splits are realistic. All that matters is capturing the statistical properties that drive the changes in import reuse as the resolution is increased.
+When plotting the same curve for the 40 available countries individually, results vary, but all except Russia's import reuse raises as the resolution increases. For Russia, the curve slightly declines, at least for some of the years in the dataset, indicating that the domestic input preference of Russia is slightly negative.
 
-When splitting a node $c$ into two new nodes $a$ and $b$, all edges that contain $c$ are removed and replaced by two new edges that contain $a$ and $b$ in its place and that have positive weights whose sum equals the weight of the old edge.\footnote{In the special case of the edge $e=(c, c, w)$, four new edges $(a, a, w_1), (a, b, w_2), (a, b, w_3), (a, b, w - w_1 - w_2 - w_3)$ are created.} 
+\subsection{Scale-Invariance}
+As a next step, domestic consumption preference $p_{dom}$ is varied as described in section \ref{met:scale-invariance}. Figure \ref{fig:germany} shows how the slope of Germany's reuse-resolution curve changes as $p_{dom}$ is varied. For $p_{dom}=XXX$ it is flat, with $cov(r, f) = 0.0001 XXX$. Depending on the country, the scale-invariant value of $p_{dom}$ varies. Also, it varies over time. Figure \ref{fig:time} shows how Greece's import reuse and domestic consumption preferences changed over time. Both variables have comparable variances over time. TODO: figure with traditional and new import reuse, plus preference for Greece.
 
-[Some comments on the statistial properties. Splits seem beta distributed with $\alpha=\beta=0.5$. Note that correlation of import intensity and export intensity is necessary, but not sufficient.]
+Table \ref{tab:ranking} ranks countries by domestic consumption preference of 2011. The raw data for all other years and other countries for the aforementioned figures can be found in file href{asdasd}{XXX}. It is unclear whether much meaning should be attributed to this hidden variable, and if so, what it it should be exactly. Is there a pattern behind the countries with low domestic consumption preference? This might be an interesting question for future research.
 
-... more details description of approach, if it actually works. :) It is not implemented yet.
+\subsection{Drivers of Import Reuse}
+Import reuse varies across countries. The most important driver of import reuse is the import volume relative to the country's economy, here measured as import share $s = imports / (consumption + exports)$. Import share $s_{c,y}$ of a country $c$ in year $y$ can already explain 72\% of import reuse $f_{c,y}$. Together with domestic consumption preference $p_{dom,c,y}$, the $R^2$ is improved to 92\% when regressing:
 
+\[f_{c,y} = b_0 + b_1 s_{c,y} + b_2 p_{dom,c,y}\]
 
-\subsection{Results}
-
-Russia's import reuse goes down as resolution is increased, the others go up. Producer of raw inputs that must be sent abroad for making consumption goods?
-
-Figure of how global import reuse grows as the number of sectors is increased.\\
-Table of import content by country as estimated by Leontief inverse on 10 sectors, 35 sectors, and many simulated sectors.\\
-
+Both variables are highly significant (t-stat above 40). Given that $p_{dom,c,y}$ is the variable used for mininizing $corr(f_c, r)$ in each year, this is not surprising. However, $p_{dom,c,y}$ even has significant explanatory power for the traditional Leontief import reuse (t-stat 17.58). All the underlying data is available as \href{}
 
 \section{Discussion}
 a.	Robustness vis-à-vis sub-samples / sub-period\\
@@ -110,5 +122,10 @@ c.	Limitations and further questions
 Thought: Considering capital accumulation as consumption lowers the measured import reuse, as it can mask the foreign origin of domestic capital.
 
 \section{Conclusion}
+
+\bibliographystyle{plain}      % basic style, author-year citations
+%\bibliographystyle{spmpsci}      % mathematics and physical sciences
+%\bibliographystyle{spphys}       % APS-like style for physics
+\bibliography{termpaper}
 
 \end{document}

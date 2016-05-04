@@ -1,0 +1,34 @@
+%Filename: ts1pfr.fd
+%Created by: tex fontinst
+%Created using fontinst v1.801
+
+%THIS FILE SHOULD BE PUT IN A TEX INPUTS DIRECTORY
+
+\ProvidesFile{ts1pfr.fd}
+   [2002/03/12 Fontinst v1.801 font definitions for TS1/pfr.]
+
+\DeclareFontFamily{TS1}{pfr}{}
+
+\DeclareFontShape{TS1}{pfr}{m}{n}{
+   <-> pfrr8c
+}{}
+
+\DeclareFontShape{TS1}{pfr}{m}{sl}{
+   <-> pfrro8c
+}{}
+
+\DeclareFontShape{TS1}{pfr}{b}{n}{
+   <-> pfrb8c
+}{}
+
+\DeclareFontShape{TS1}{pfr}{b}{sl}{
+   <-> pfrbo8c
+}{}
+
+\DeclareFontShape{TS1}{pfr}{m}{it}{<->ssub * pfr/m/sl}{}
+\DeclareFontShape{TS1}{pfr}{bx}{n}{<->ssub * pfr/b/n}{}
+\DeclareFontShape{TS1}{pfr}{bx}{sl}{<->ssub * pfr/b/sl}{}
+\DeclareFontShape{TS1}{pfr}{b}{it}{<->ssub * pfr/b/sl}{}
+\DeclareFontShape{TS1}{pfr}{bx}{it}{<->ssub * pfr/b/it}{}
+
+\endinput

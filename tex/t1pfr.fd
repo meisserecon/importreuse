@@ -1,0 +1,43 @@
+%Filename: t1pfr.fd
+%Created by: tex fontinst
+%Created using fontinst v1.801
+
+%THIS FILE SHOULD BE PUT IN A TEX INPUTS DIRECTORY
+
+\ProvidesFile{t1pfr.fd}
+   [2002/03/12 Fontinst v1.801 font definitions for T1/pfr.]
+
+\DeclareFontFamily{T1}{pfr}{}
+
+\DeclareFontShape{T1}{pfr}{m}{n}{
+   <-> pfrr8t
+}{}
+
+\DeclareFontShape{T1}{pfr}{m}{sc}{
+   <-> pfrrc8t
+}{}
+
+\DeclareFontShape{T1}{pfr}{m}{sl}{
+   <-> pfrro8t
+}{}
+
+\DeclareFontShape{T1}{pfr}{b}{n}{
+   <-> pfrb8t
+}{}
+
+\DeclareFontShape{T1}{pfr}{b}{sc}{
+   <-> pfrbc8t
+}{}
+
+\DeclareFontShape{T1}{pfr}{b}{sl}{
+   <-> pfrbo8t
+}{}
+
+\DeclareFontShape{T1}{pfr}{m}{it}{<->ssub * pfr/m/sl}{}
+\DeclareFontShape{T1}{pfr}{bx}{n}{<->ssub * pfr/b/n}{}
+\DeclareFontShape{T1}{pfr}{bx}{sc}{<->ssub * pfr/b/sc}{}
+\DeclareFontShape{T1}{pfr}{bx}{sl}{<->ssub * pfr/b/sl}{}
+\DeclareFontShape{T1}{pfr}{b}{it}{<->ssub * pfr/b/sl}{}
+\DeclareFontShape{T1}{pfr}{bx}{it}{<->ssub * pfr/b/it}{}
+
+\endinput

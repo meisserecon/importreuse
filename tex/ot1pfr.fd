@@ -1,0 +1,43 @@
+%Filename: ot1pfr.fd
+%Created by: tex fontinst
+%Created using fontinst v1.801
+
+%THIS FILE SHOULD BE PUT IN A TEX INPUTS DIRECTORY
+
+\ProvidesFile{ot1pfr.fd}
+   [2002/03/12 Fontinst v1.801 font definitions for OT1/pfr.]
+
+\DeclareFontFamily{OT1}{pfr}{}
+
+\DeclareFontShape{OT1}{pfr}{m}{n}{
+   <-> pfrr7t
+}{}
+
+\DeclareFontShape{OT1}{pfr}{m}{sc}{
+   <-> pfrrc7t
+}{}
+
+\DeclareFontShape{OT1}{pfr}{m}{sl}{
+   <-> pfrro7t
+}{}
+
+\DeclareFontShape{OT1}{pfr}{b}{n}{
+   <-> pfrb7t
+}{}
+
+\DeclareFontShape{OT1}{pfr}{b}{sc}{
+   <-> pfrbc7t
+}{}
+
+\DeclareFontShape{OT1}{pfr}{b}{sl}{
+   <-> pfrbo7t
+}{}
+
+\DeclareFontShape{OT1}{pfr}{m}{it}{<->ssub * pfr/m/sl}{}
+\DeclareFontShape{OT1}{pfr}{bx}{n}{<->ssub * pfr/b/n}{}
+\DeclareFontShape{OT1}{pfr}{bx}{sc}{<->ssub * pfr/b/sc}{}
+\DeclareFontShape{OT1}{pfr}{bx}{sl}{<->ssub * pfr/b/sl}{}
+\DeclareFontShape{OT1}{pfr}{b}{it}{<->ssub * pfr/b/sl}{}
+\DeclareFontShape{OT1}{pfr}{bx}{it}{<->ssub * pfr/b/it}{}
+
+\endinput

@@ -31,7 +31,7 @@ public class Composition {
 		this.directConsumption = 0.0;
 	}
 
-	public void include(Composition source, double value) {
+	public void include(Composition source, final double value) {
 		assert value >= 0.0;
 		assert source.normalized;
 		assert!normalized;
@@ -48,7 +48,7 @@ public class Composition {
 	}
 
 	public void normalize() {
-		double[] sum = new double[1];
+		final double[] sum = new double[1];
 		this.shares.forEach(new ObjDoubleConsumer<Country>() {
 
 			@Override

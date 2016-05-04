@@ -14,7 +14,7 @@ import com.meissereconomics.seminar.Node;
 public class MaxFlow {
 
 	private Node source, target;
-	private DefaultDirectedWeightedGraph<Node, DefaultEdge> graph;
+	private DefaultDirectedWeightedGraph<Node, DefaultWeightedEdge> graph;
 
 	public MaxFlow(Country c, boolean imports) {
 		graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
@@ -32,7 +32,7 @@ public class MaxFlow {
 		for (Node n : list) {
 			graph.addVertex(n);
 		}
-		for (Node n : list) {
+		for (final Node n : list) {
 			if (n != target) {
 				double weight = imports ? n.getImports() : n.getCreatedValue();
 				graph.setEdgeWeight(graph.addEdge(source, n), weight);
@@ -52,7 +52,7 @@ public class MaxFlow {
 	}
 
 	public double calculateMaxFlow() {
-		EdmondsKarpMaximumFlow<Node, DefaultEdge> flow = new EdmondsKarpMaximumFlow<>(graph, 0.00001);
+		EdmondsKarpMaximumFlow<Node, DefaultWeightedEdge> flow = new EdmondsKarpMaximumFlow<>(graph, 0.00001);
 		double max = flow.buildMaximumFlow(source, target).getValue();
 		return max;
 	}
