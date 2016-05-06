@@ -9,7 +9,6 @@ import org.apache.commons.math3.stat.correlation.Covariance;
 import com.meissereconomics.seminar.Country;
 import com.meissereconomics.seminar.EFlowBendingMode;
 import com.meissereconomics.seminar.InputOutputGraph;
-import com.meissereconomics.seminar.util.Formatter;
 
 import net.openhft.koloboke.collect.map.ObjDoubleMap;
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;

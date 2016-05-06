@@ -16,10 +16,10 @@ public class ConsumptionPreference {
 	public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
 		long t0 = System.nanoTime();
 		Table results = new Table("Mode", "Level", "Country", "Bending");
-		EFlowBendingMode mode = EFlowBendingMode.INPUTS;
+		EFlowBendingMode mode = EFlowBendingMode.DEFAULT;
 		results.setCurrent("Mode", mode.name());
 		for (int run = 0; run < 10; run++) {
-			InputOutputGraph iograph = new InputOutputGraph("data/wiot05_row_apr12.CSV");
+			InputOutputGraph iograph = new InputOutputGraph("data/wiot11_row_sep12.CSV");
 			for (int level = InputOutputGraph.SECTORS; level > 0; level--) {
 				results.setCurrent("Level", Integer.toString(level));
 				iograph.collapseRandomSectors(run * 31, level);

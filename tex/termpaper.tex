@@ -5,20 +5,20 @@
 \usepackage{hyperref}
 \usepackage{epstopdf}
 \usepackage{graphicx}
-\usepackage{natbib}
+
 
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
     filecolor=black,      
-    urlcolor=black,
+    urlcolor=blue,
     citecolor=black
 }
 
 \begin{document}
 
 %% Titelei
-\title{A scale-invariant calculation of import contents of exports}
+\title{Scale-invariant import contents from input-output tables}
 
 %\subtitle{}
 
@@ -28,31 +28,16 @@
 
 \maketitle
 
-\emph{The most popular tool to calculate import content of exports (also known as ...) from given reuse of exports from given input-output tables. Unfortunately, it yields wrong results when the inputs of sectors are not proportionally used for the production of their outputs, which usually is the case. As a consequene, input reuse as calculated by the Leontief inverse depends on the resolution of the underlying data, monotonically increasing from 17\% to 24\% globally as the resolution is increased from one aggregate to 35 sectors per country. To address this problem, I postulate a hidden variable 'gravity of local consumption' and introduce a scale-invariant calculation method to estimate the true import reuse under the assumption of self-similarity, resulting in about 32\% globally.}
+\emph{The Leontief inverse is the standard tool to calculate import content of exports (also known as import reuse, foreign contents of exports, and vertical specialization) from given input-output tables. Unfortunately, it yields wrong results when the inputs of sectors are not proportionally used for the production of their outputs, which usually is the case. As a consequence, input reuse as calculated by the Leontief inverse depends on the resolution of the underlying data. In case of the WIOD dataset, global average import reuse climbs steadily from 17\% to 24\% as the resolution is increased from one to thirty-five sectors per country. To address this problem, I postulate a hidden variable 'domestic consumption preference' to construct a scale-invariant computation method, resulting in a more credible 32\% globally.}
 
 \section{Introduction}
-Import reuse, sometimes also called the import content of exports, is a basic metric that is typically derived from input-output tables and often serves as an intermediate step for more elaborate calculations, for example as a contributing factor when estimating exchange-rate pass-through. It measures the extent to which exports consist of previous imports. Its usual method of calculation is to derive the composition of exports by applying the Leontief inverse to the input-output table of the exporting country. \ref{OECD} More accurate results are achieved when basing the calculation on a worldwide input-output table such as WIOD, as this allows to account for circular flows of goods between country. \ref{Auer}
+Import reuse\footnote{The OECD refers to import reuse as \href{http://www.oecd-ilibrary.org/trade/data/oecd-wto-statistics-on-trade-in-value-added_data-00648-en}{foreign value added share of gross exports}, which complements domestic value added share of gross exports. Hummels et al coined the term vertical specialization to refer to import reuse.\cite{hummels2001nature}} is a basic metric that is typically derived from input-output tables and often serves as an intermediate step for more elaborate calculations, for example as a contributing factor when estimating exchange-rate pass-through. It measures the extent to which exports consist of previous imports. Its usual method of calculation is to derive the composition of exports by applying the Leontief inverse to the input-output table of the exporting country. \ref{OECD} More accurate results are achieved when basing the calculation on a worldwide input-output table such as WIOD, as this allows to account for circular flows of goods between country. \ref{Auer}
 
-The subtle problem with this traditional approach is that the Leontief inverse implicitely assumes proportional use of inputs. In practice, however, firms that import much also tend to export much. \ref{Amiti} When aggregating such firms together with firms that have low import intensity, information about the actual use of specific imports gets lost and the import reuse as calculated by the Leontief inverse decreases. Thus, when the import intensity and the export intensity of sectors beyond the resolution of the data at hand are positively correlated, the Leontief inverse systematically underestimates import reuse. This is the case for all the 42 countries present in the WIOD database, except for Russia, which exhibits a negative correlation.
+The subtle problem with this traditional approach is that the Leontief inverse implicitely assumes proportional use of inputs. In practice, however, firms that import much also tend to export much. \ref{Amiti} When aggregating such firms together with firms that have low import intensity, information about the actual use of specific imports gets lost and the import reuse as calculated by the Leontief inverse decreases. Thus, when the import intensity and the export intensity of sectors beyond the resolution of the data at hand are positively correlated, the Leontief inverse systematically underestimates import reuse. This is also the case for all the 42 countries present in the WIOD database, except for Russia, which exhibits a negative correlation.
 
-After illustrating how strongly the reported import reuse depends on the resolution of the data, I construct a simple heuristic to artificially increase the resolution, thereby allowing to better estimate the true import reuse under the assumption of self-similarity between sectors at different resolutions. The source code of the used computer program is provided in a public repository\footnote{\href{https://github.com/kronrod/importreuse}{github.com/kronrod/importreuse}, with more detailed instructions in the repository itself.}, allowing anyone skilled in the art to reproduce these results within minutes and to calculate import reuse more accurately on their own datasets.
+Koopman et al. \cite{koopman2012tracing} as well as Kee and Tang \cite{kee2013domestic}, both focusing on China, address this problem by enriching input-output tables with additional data to isolate processing trade. Koopman et al. summarize their approach as follows: "The basic idea is to use information from the standard I/O table to determine sector-level total imports/exports, and information from trade statistics to determine the relative proportion of processing and normal exports within each sector." Similarly to the findings presented in here, they find that actual import reuse is much higher than what the traditional approach suggests described by Hummels et al. \cite{hummels2001nature} suggests. In contrast to these previous approaches, I present a method to better estimate import reuse that does not rely on having additional data, but instead calculates a more plausible result from input-output tables alone under the assumption of self-similarity.
 
-Subsequent section \ref{sec:data} describes the used data. It is followed by a detailed description of ...
-
-
-Koopman, Robert, Zhi Wang, and Shang-Jin Wei. "Estimating domestic content in exports when processing trade is pervasive." Journal of development economics 99.1 (2012): 178-189.
-Recognize short-comings of Leontief Inverse, manually introduce extra nodes to separate imports that are sent abroad again, which they call ‘processing trade’. Estimate China to have 50% import reuse in manufactured exports, and 60% before joining WTO.
-
-Seminal paper with 2600 citations:
-Hummels, David, Jun Ishii, and Kei-Mu Yi. "The nature and growth of vertical specialization in world trade." Journal of international Economics 54.1 (2001): 75-96.
-Take into account back-and-forth flows between countries. The vertical specialisation (VS) share of world trade is about 25% (another name of import content of exports).
-Matrix view, apply leontief inverse.
-Problematic: varying numbers of sectors across time (?), page 27
-
-
-The literature on vertical trade aims at measuring sequential trade in vertical production chains by looking at the import content of exports.
-"Mexico’s manufacturing exports have a foreign content share of approximately 66%". Uses "foreign value added" as another term of import reuse. Also "value added of trade".
-Literature World Bank Collection.pdf
+Generally, I treat economic trade flows as a graph and not as a matrix, a choice motivated in section \ref{sec:data}, which also describes the used data more closely. Subsequent section \ref{sec:method} sheds light on the applied methods,starting with illustrating how strongly the reported import reuse depends on the resolution of the data, and then introducing a hidden variable that allows the calculated import reuse to be tuned such that it becomes robust to changes in resolution (scale-invariant). This is followed by results section \ref{sec:result} that presents selected findings, and a concluding section \ref{sec:conclusion}. All source code, data, and outputs can be found on \href{https://github.com/kronrod/importreuse}{github.com/kronrod/importreuse}.
 
 \section{Data}
 \label{sec:data}
@@ -65,7 +50,8 @@ Usually, economists treat input-output tables as matrices. An equally valid and 
 
 When merging two nodes $a$ and $b$ of a graph into a new node $c$, the nodes $a$ and $b$ are replaced by $c$ in all edges and then all edges that connect the same nodes in the same direction aggregated into a single new edge whose weight is the sum of the old weights. This is equivalent to first removing column $i$ and adding it to column $j$ in the matrix view, and then also removing row $i$ and adding it to row $j$, with $i$ and $j$ being the indices of the two sectors represented by nodes $a$ and $b$. When doing so, the indices of other sectors may change, making it less convenient to track a specific sector in the matrix view than in the graph view, where the names of unaffected nodes stay the same when others are merged. Generally, the graph view is more compact than the matrix view when the matrix is sparse.
 
-\section{Empirical Part}
+\section{Method}
+\label{sec:method}
 
 \subsection{Varying the Sector Resolution}
 \label{Varying}
@@ -85,7 +71,8 @@ Equipped with a parameter to tune, one can try to find values of $p_{dom}$ that 
 
 Being robust against the tested changes in resolution, the import reuse resulting from assuming the scale-invariant domestic consumption preference is more plausible than the one calculated with the proportional assignment of inputs. Under the assumption that it is also robust against changes in resolution beyond the limits of the data at hand, the calculated scale-invariant import reuse matches the true import reuse. This assumption is valid if the input-output graph is self-similar, i.e. if the network similarly structured at all scales. Given that a wide range of real-world networks exhibit self-similarity \cite{song2005self}, this might be the best possible estimate in the absence of more fine-grained data.
 
-\section{Results}
+\section{Result}
+\label{sec:result}
 
 \subsection{Varying the Resolution}
 \label{res:varying}
@@ -112,16 +99,15 @@ Import reuse varies across countries. The most important driver of import reuse 
 
 \[f_{c,y} = b_0 + b_1 s_{c,y} + b_2 p_{dom,c,y}\]
 
-Both variables are highly significant (t-stat above 40). Given that $p_{dom,c,y}$ is the variable used for mininizing $corr(f_c, r)$ in each year, this is not surprising. However, $p_{dom,c,y}$ even has significant explanatory power for the traditional Leontief import reuse (t-stat 17.58). All the underlying data is available as \href{}
-
-\section{Discussion}
-a.	Robustness vis-à-vis sub-samples / sub-period\\
-b.	Correlation or causality?\\
-c.	Limitations and further questions
-
-Thought: Considering capital accumulation as consumption lowers the measured import reuse, as it can mask the foreign origin of domestic capital.
+Both variables are highly significant (t-stat above 40). Given that $p_{dom,c,y}$ is the variable used for mininizing $corr(f_c, r)$ in each year, this is not surprising. However, $p_{dom,c,y}$ even has significant explanatory power for the traditional Leontief import reuse (t-stat 17.58). All the underlying data is available as \href{https://github.com/kronrod/importreuse/blob/master/data/reusedrivers.dta}{reusedrivers.dta} and \href{https://github.com/kronrod/importreuse/blob/master/data/reusedrivers.dta}{reusedrivers.csv}, and the stata output as \href{https://github.com/kronrod/importreuse/blob/master/data/reusedrivers.pdf}{reusedrivers.pdf}.
 
 \section{Conclusion}
+\label{sec:conclusion}
+I demonstrated that the standard approach of calculating input reuse from input-output tables strongly depends on the resolution of the underlying data and thus cannot be trusted when applied to the highly aggregate data usually provided by input-output tables. To address this flaw, I postulate a hidden variable \emph{domestic consumption preference} for each country and year, and tune it such that the calculated import reuse becomes scale-invariant, thereby fixing the aforementioned flaw. Assuming that input-output tables stay self-similar when increasing their resolution beyond the resolution of the available data, this improved approach yields the true import reuse.
+
+When applied to atomic data,\footnote{A hypothetical input-output table with atomic resolution would allow to track the exact trade path of every single apple as well as every other good at its atomic quantity.} all discussed approaches must yield the same result, as they must stay within the bounds given by maximum flow, which converge towards the true import reuse as the resolution is increased. In theory, any value within these bounds could be the true value and the slope of the curve shown in figure \ref{fig:resolution} could change multiple times in all conceivable directions when the resolution is further increased. However, in absence of evidence to the contrary, the simplest assumption should be considered the most probable, namely that the structure of the data remains roughly the same at smaller scales. In that case, the scale-invariant estimate is the best guess for the true import reuse.
+
+The presented approach raises the important question whether the introduced hidden variable \emph{domestic consumption preference} is purely technical or whether it has broader implications. Deriving and testing such implications could constitute worthwhile future research. But first, one should verify whether this proposed approach yields consistent results when applied to other, and in particular more fine-grained data. Also, one could dig deeper into the specific ways in which the input-output graph must be self-similar in order for the results to be robust. A related question is whether the assumption taken for the construction of the input-output tables (for example the proportionality assumption) causes systemic distortions. Lastly, it would also be nice to improve algorithmic elegance and computational efficiency.
 
 \bibliographystyle{plain}      % basic style, author-year citations
 %\bibliographystyle{spmpsci}      % mathematics and physical sciences
