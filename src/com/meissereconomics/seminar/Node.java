@@ -28,13 +28,13 @@ public class Node {
 
 	private final Country country;
 	private final String industry;
-	private Composition origin, next;
+	private Composition origin;
 	private HashObjDoubleMap<Node> outputs, inputs;
 
 	public Node(Country c, String industry) {
 		this.country = c;
 		this.industry = industry;
-		this.origin = new Composition(country);
+		this.origin = new Composition(c.getCountries(), country.getNumber());
 		this.inputs = HashObjDoubleMaps.newMutableMap();
 		this.outputs = HashObjDoubleMaps.newMutableMap();
 	}
@@ -54,7 +54,7 @@ public class Node {
 	public double calculateComposition(Node consumption, EFlowBendingMode mode, double localConsumptionPreference) {
 		double value = Math.max(0, getCreatedValue());
 
-		Composition comp = new Composition(country, value);
+		Composition comp = new Composition(origin.getCountryCount(), country.getNumber(), value);
 		inputs.forEach(new ObjDoubleConsumer<Node>() {
 
 			@Override
@@ -65,7 +65,7 @@ public class Node {
 		comp.redirectDomesticInputs(outputs.getDouble(consumption), mode, localConsumptionPreference);
 		comp.normalize();
 		double difference = comp.diff(origin);
-		this.next = comp;
+		this.origin = comp;
 		return difference;
 	}
 
@@ -75,10 +75,6 @@ public class Node {
 		double preferentialFlow = localConsumptionPreference * Math.min(localConsumption, value);
 		value -= preferentialFlow;
 		return value;
-	}
-
-	public void updateComposition() {
-		this.origin = next;
 	}
 
 	public Composition getOrigin() {
@@ -111,9 +107,10 @@ public class Node {
 			public void accept(Node othersDestination, double value) {
 				assert other != othersDestination;
 				assert other != Node.this;
-				double existing = othersDestination.inputs.containsKey(Node.this) ? othersDestination.inputs.get(Node.this) : 0.0;
-				assert existing == (Node.this.outputs.containsKey(othersDestination) ? Node.this.outputs.get(othersDestination) : 0.0);
-				double additional = othersDestination.inputs.remove(other);
+				double existing = othersDestination.inputs.containsKey(Node.this) ? othersDestination.inputs.getDouble(Node.this) : 0.0;
+				assert existing == (Node.this.outputs.containsKey(othersDestination) ? Node.this.outputs.getDouble(othersDestination) : 0.0);
+				double additional = othersDestination.inputs.removeAsDouble(other);
+				othersDestination.inputs.shrink();
 				assert additional == value;
 				double sum = existing + additional;
 				othersDestination.inputs.put(Node.this, sum);
@@ -126,9 +123,10 @@ public class Node {
 			public void accept(Node othersSource, double value) {
 				assert other != othersSource;
 				assert other != Node.this;
-				double existing = othersSource.outputs.containsKey(Node.this) ? othersSource.outputs.get(Node.this) : 0.0;
-				assert existing == (Node.this.inputs.containsKey(othersSource) ? Node.this.inputs.get(othersSource) : 0.0);
-				double additional = othersSource.outputs.remove(other);
+				double existing = othersSource.outputs.containsKey(Node.this) ? othersSource.outputs.getDouble(Node.this) : 0.0;
+				assert existing == (Node.this.inputs.containsKey(othersSource) ? Node.this.inputs.getDouble(othersSource) : 0.0);
+				double additional = othersSource.outputs.removeAsDouble(other);
+				othersSource.outputs.shrink();
 				assert additional == value;
 				double sum = existing + additional;
 				othersSource.outputs.put(Node.this, sum);
@@ -153,6 +151,8 @@ public class Node {
 		double sum = self + incoming + outgoing + otherSelf;
 		inputs.put(this, sum);
 		outputs.put(this, sum);
+		inputs.shrink();
+		outputs.shrink();
 	}
 
 	public double getCreatedValue() {
@@ -189,7 +189,7 @@ public class Node {
 				if (!isConsumption()) { // ignore negative consumption
 					linkTo(next.getKey(), -next.getValue());
 				}
-				next.getKey().outputs.remove(this);
+				next.getKey().outputs.removeAsDouble(this);
 				iter.remove();
 			}
 		}

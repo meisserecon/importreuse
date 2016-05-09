@@ -6,8 +6,8 @@ public class RedirectionTest {
 	
 	@Test
 	public void testRedirection(){
-		Country other = new Country("Other");
-		Country home = new Country("Home");
+		Country other = new Country("Other", 0, 2);
+		Country home = new Country("Home", 1, 2);
 		Node source = other.getNode("Industry");
 		Node stage1 = home.getNode("Stage 1");
 		source.linkTo(stage1, 100);
@@ -22,7 +22,6 @@ public class RedirectionTest {
 		double diff = 1.0;
 		while (diff >= 0.001){
 			diff = home.calculateComposition(EFlowBendingMode.BOTH, 1.0);
-			home.updateComposition();
 		}
 		double reuse = home.getReusedImports() / home.getExports();
 		assert reuse >= 0.999;

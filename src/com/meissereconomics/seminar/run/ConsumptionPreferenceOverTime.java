@@ -5,17 +5,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.math3.stat.correlation.Covariance;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.apache.commons.math3.stat.descriptive.moment.Variance;
 
 import com.meissereconomics.seminar.Country;
 import com.meissereconomics.seminar.EFlowBendingMode;
 import com.meissereconomics.seminar.InputOutputGraph;
+import com.meissereconomics.seminar.util.Formatter;
 
 import net.openhft.koloboke.collect.map.ObjDoubleMap;
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;
 
 /**
  */
-public class BendingByCountry {
+public class ConsumptionPreferenceOverTime {
 
 	private static final double DEFAULT_BENDING = 0.0;
 	private static final double EPSILON = 0.001;
@@ -23,35 +26,50 @@ public class BendingByCountry {
 
 	private int year;
 	private double[] levels;
-	private InputOutputGraph[] graphs;
-	private ObjDoubleMap<String> bendings;
-	
-	public BendingByCountry(int year) throws FileNotFoundException, IOException {
+	private InputOutputGraph[][] graphs;
+	private ObjDoubleMap<String> bendings, leontief;
+
+	public ConsumptionPreferenceOverTime(int seed, int year, int runs) throws FileNotFoundException, IOException {
 		this.year = year;
 		String file = getFilename(year);
-//		System.out.println("Processing file " + file);
+		// System.out.println("Processing file " + file);
 		this.levels = new double[InputOutputGraph.SECTORS];
-		this.graphs = new InputOutputGraph[1]; // TEMP InputOutputGraph.SECTORS];
-		for (int i = 0; i < graphs.length; i++) {
-			this.levels[i] = i + 1.0;
-			this.graphs[i] = new InputOutputGraph(file);
-//			this.graphs[i].collapseRandomSectors(i * 31, i + 1);
-			this.graphs[i].deriveOrigins(MODE, DEFAULT_BENDING);
-//			System.out.println("Initialized level " + levels[i] + ", used " + Runtime.getRuntime().totalMemory() + " of " + Runtime.getRuntime().maxMemory());
-		}
 		this.bendings = HashObjDoubleMaps.newMutableMap();
-		for (Country c : graphs[0].getCountries()) {
-			this.bendings.put(c.getName(), DEFAULT_BENDING);
+		this.leontief = HashObjDoubleMaps.newMutableMap();
+		this.bendings = HashObjDoubleMaps.newMutableMap();
+		this.graphs = new InputOutputGraph[InputOutputGraph.SECTORS][runs];
+		for (int i = 0; i < graphs.length; i++) {
+			int sector = i + 1;
+			this.levels[i] = sector;
+			for (int run = 0; run < runs; run++) {
+				System.out.println("Loading " + sector + " - " + run);
+				InputOutputGraph graph = new InputOutputGraph(file);
+				graph.collapseRandomSectors(run * 31 + seed * 12313, sector);
+				if (sector == InputOutputGraph.SECTORS && run == 0) {
+					graph.deriveOrigins(MODE, 0.0);
+					for (Country c : graph.getCountries()) {
+						this.leontief.put(c.getName(), c.getImportReuse());
+						this.bendings.put(c.getName(), DEFAULT_BENDING);
+					}
+				}
+				graph.deriveOrigins(MODE, DEFAULT_BENDING);
+				if (sector == InputOutputGraph.SECTORS || sector == 1){
+					// graph 1 and 35 are always the same
+					this.graphs[i] = new InputOutputGraph[]{graph};
+					break;
+				} else {
+					this.graphs[i][run] = graph;
+				}
+			}
 		}
-//		System.out.println("Initialization complete");
 	}
-	
-	private static String getFilename(int year){
-		if (year <= 1999){
+
+	private static String getFilename(int year) {
+		if (year <= 1999) {
 			return "data/wiot" + (year - 1900) + "_row_apr12.csv";
-		} else if (year <= 2007){
+		} else if (year <= 2007) {
 			return "data/wiot0" + (year - 2000) + "_row_apr12.csv";
-		} else if (year <= 2009){
+		} else if (year <= 2009) {
 			return "data/wiot0" + (year - 2000) + "_row_sep12.csv";
 		} else {
 			return "data/wiot" + (year - 2000) + "_row_sep12.csv";
@@ -65,25 +83,19 @@ public class BendingByCountry {
 	}
 
 	public void printAll() {
-//		System.out.println("Country\tBending\tReuse\tVariance\tCovariance");
 		ArrayList<String> countries = new ArrayList<>(bendings.keySet());
 		java.util.Collections.sort(countries);
-		double imps = 0.0;
-		double reus = 0.0;
 		for (String country : countries) {
-			Country c = graphs[0].getCountry(country);
-//			double bending = bendings.getDouble(country);
-//			double[] reuses = calculateReuse(country);
-//			double reuse = new Mean().evaluate(reuses);
-//			double variance = new Variance().evaluate(reuses);
-//			double covariance = new Covariance().covariance(levels, reuses);
-//			System.out.println(Formatter.toTabs(country, bending, reuse, variance, covariance));
-//			System.out.println(Formatter.toTabs(country, graphs[0].getCountry(country).getExports(), graphs[0].getCountry(country).getImports(), graphs[0].getCountry(country).getConsumption(), graphs[0].getCountry(country).getMaxDomesticFlow(true)));
-			System.out.println(year + "\t" + country + "\t" + c.getImportReuse());
-			imps += c.getExports();
-			reus += c.getReusedImports();
+			double bending = bendings.getDouble(country);
+			double[] reuses = calculateReuse(country);
+			double reuse = new Mean().evaluate(reuses);
+			double variance = new Variance().evaluate(reuses);
+			double covariance = new Covariance().covariance(levels, reuses);
+			double leontiefReuse = leontief.getDouble(country);
+			Country c = graphs[0][0].getCountry(country);
+			double exports = c.getExports();
+			System.out.println(Formatter.toTabs(year, country, bending, reuse, variance, covariance, exports, c.getImports(), c.getConsumption(), c.getMaxDomesticFlow(true) / exports, leontiefReuse));
 		}
-		System.out.println(year + "\tGlobal\t" + (reus / imps));
 	}
 
 	public void optimizeCountry(String country) {
@@ -92,7 +104,7 @@ public class BendingByCountry {
 		if (Math.abs(cov1) > EPSILON) {
 			double bending2 = findFirst(country, bending1, cov1 > 0);
 			double bendingNew = bending2 <= 0.0 ? 0.0 : binarySearch(country, bending1, bending2);
-			System.out.println("Updating bending of " + country + " from " + bending1 + " to " + bendingNew);
+			// System.out.println("Updating bending of " + country + " from " + bending1 + " to " + bendingNew);
 			this.bendings.put(country, bendingNew);
 		}
 	}
@@ -106,7 +118,9 @@ public class BendingByCountry {
 				return bending1;
 			}
 			double cov2 = calculateCovariance(country, bending2);
-			assert cov2 < 0.0;
+			if (cov2 >= 0.0) {
+				return bending2;
+			}
 			while (Math.abs(bending2 - bending1) > EPSILON) {
 				double middle = (bending1 + bending2) / 2;
 				double covMiddle = calculateCovariance(country, middle);
@@ -139,8 +153,10 @@ public class BendingByCountry {
 	}
 
 	protected double calculateCovariance(String country, double bending) {
-		for (InputOutputGraph graph : graphs) {
-			graph.getCountry(country).deriveOrigins(MODE, bending);
+		for (InputOutputGraph[] graphs : this.graphs) {
+			for (InputOutputGraph graph : graphs) {
+				graph.getCountry(country).deriveOrigins(MODE, bending);
+			}
 		}
 		double cov = new Covariance().covariance(levels, calculateReuse(country));
 		return cov;
@@ -149,16 +165,27 @@ public class BendingByCountry {
 	protected double[] calculateReuse(String country) {
 		double[] reuse = new double[levels.length];
 		for (int i = 0; i < reuse.length; i++) {
-			reuse[i] = graphs[i].getCountry(country).getImportReuse();
+			reuse[i] = calculateReuse(country, graphs[i]);
 		}
 		return reuse;
 	}
 
+	private double calculateReuse(String country, InputOutputGraph[] inputOutputGraphs) {
+		double avg = 0.0;
+		for (InputOutputGraph graph: inputOutputGraphs){
+			avg += graph.getCountry(country).getImportReuse();
+		}
+		return avg / inputOutputGraphs.length;
+	}
+
 	public static void main(String[] args) throws FileNotFoundException, IOException {
+		long t0 = System.nanoTime();
+		System.out.println("Year\tCountry\tBending\tReuse\tVariance\tCovariance\tExports\tImports\tConsumption\tMax flow reuse\tLeontief Reuse");
 		for (int year = 1995; year <= 2011; year++) {
-			BendingByCountry bendings = new BendingByCountry(year);
-//			bendings.optimizeAll();
+			ConsumptionPreferenceOverTime bendings = new ConsumptionPreferenceOverTime(13, year, 5);
+			bendings.optimizeAll();
 			bendings.printAll();
+			System.out.println("Processed " + year + " after " + (System.nanoTime() - t0)/1000000 + "ms");
 		}
 	}
 

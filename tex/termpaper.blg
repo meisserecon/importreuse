@@ -1,46 +1,5 @@
-This is BibTeX, Version 0.99d (TeX Live 2015)
-Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
-The top-level auxiliary file: termpaper.aux
-The style file: plain.bst
+This is BibTeX, Version 0.99dThe top-level auxiliary file: termpaper.aux
+The style file: abbrvnat.bst
 Database file #1: termpaper.bib
-You've used 6 entries,
-            2118 wiz_defined-function locations,
-            535 strings with 5155 characters,
-and the built_in function-call counts, 2078 in all, are:
-= -- 198
-> -- 138
-< -- 0
-+ -- 56
-- -- 48
-* -- 163
-:= -- 381
-add.period$ -- 18
-call.type$ -- 6
-change.case$ -- 43
-chr.to.int$ -- 0
-cite$ -- 6
-duplicate$ -- 59
-empty$ -- 127
-format.name$ -- 48
-if$ -- 401
-int.to.chr$ -- 0
-int.to.str$ -- 6
-missing$ -- 4
-newline$ -- 33
-num.names$ -- 12
-pop$ -- 33
-preamble$ -- 1
-purify$ -- 35
-quote$ -- 0
-skip$ -- 41
-stack$ -- 0
-substring$ -- 101
-swap$ -- 4
-text.length$ -- 0
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 24
-warning$ -- 0
-while$ -- 18
-width$ -- 7
-write$ -- 67
+Warning--empty journal in auer2016international
+(There was 1 warning)

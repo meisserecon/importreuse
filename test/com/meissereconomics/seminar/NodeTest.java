@@ -53,15 +53,14 @@ public class NodeTest {
 		while (diff > ACCURACY) {
 			for (Country c : cs) {
 				diff = c.calculateComposition(EFlowBendingMode.BOTH, 0.0);
-				c.updateComposition();
 			}
 		}
 	}
 
 	private Country[] createCountries() {
-		Country c1 = new Country("Aland");
+		Country c1 = new Country("Aland", 0, 2);
 		Node con1 = c1.getNode(CON);
-		Country c2 = new Country("Bland");
+		Country c2 = new Country("Bland", 1, 2);
 		Node con2 = c2.getNode(CON);
 
 		ArrayList<Node> sources = new ArrayList<>();

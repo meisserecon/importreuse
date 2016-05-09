@@ -1,35 +1,54 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{8}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem{edmonds1972theoretical}
-Jack Edmonds and Richard~M Karp.
+\bibitem[Auer et~al.(2016)Auer, Levchenko, and
+  Saur{\'e}]{auer2016international}
+R.~A. Auer, A.~A. Levchenko, and P.~Saur{\'e}.
+\newblock International inflation spillovers through input linkages.
+\newblock 2016.
+
+\bibitem[Edmonds and Karp(1972)]{edmonds1972theoretical}
+J.~Edmonds and R.~M. Karp.
 \newblock Theoretical improvements in algorithmic efficiency for network flow
   problems.
-\newblock {\em Journal of the ACM (JACM)}, 19(2):248--264, 1972.
+\newblock \emph{Journal of the ACM (JACM)}, 19\penalty0 (2):\penalty0 248--264,
+  1972.
 
-\bibitem{hummels2001nature}
-David Hummels, Jun Ishii, and Kei-Mu Yi.
+\bibitem[Hummels et~al.(2001)Hummels, Ishii, and Yi]{hummels2001nature}
+D.~Hummels, J.~Ishii, and K.-M. Yi.
 \newblock The nature and growth of vertical specialization in world trade.
-\newblock {\em Journal of international Economics}, 54(1):75--96, 2001.
+\newblock \emph{Journal of international Economics}, 54\penalty0 (1):\penalty0
+  75--96, 2001.
 
-\bibitem{kee2013domestic}
-Hiau~Looi Kee and Heiwai Tang.
+\bibitem[Kee and Tang(2013)]{kee2013domestic}
+H.~L. Kee and H.~Tang.
 \newblock Domestic value added in chinese exports: firm-level evidence.
-\newblock {\em Johns Hopkins University mimeo}, 2013.
+\newblock \emph{Johns Hopkins University mimeo}, 2013.
 
-\bibitem{koopman2012tracing}
-Robert Koopman, Zhi Wang, and Shang-Jin Wei.
+\bibitem[Koopman et~al.(2012)Koopman, Wang, and Wei]{koopman2012tracing}
+R.~Koopman, Z.~Wang, and S.-J. Wei.
 \newblock Tracing value-added and double counting in gross exports.
 \newblock Technical report, National Bureau of Economic Research, 2012.
 
-\bibitem{song2005self}
-Chaoming Song, Shlomo Havlin, and Hernan~A Makse.
-\newblock Self-similarity of complex networks.
-\newblock {\em Nature}, 433(7024):392--395, 2005.
+\bibitem[OECD(2000)]{oecd2000}
+OECD.
+\newblock The oecd input-output database, sources and methods.
+\newblock Technical report, OECD, 2000.
+\newblock URL \url{http://www.oecd.org/dataoecd/48/43/2673344.pdf}.
 
-\bibitem{timmer2012world}
-Marcel Timmer, Abdul~A Erumban, Reitze Gouma, Bart Los, Umed Temurshoev,
-  Gaaitzen~J de~Vries, I-aki Arto, Valeria Andreoni~Aur{\v{Z}}lien Genty,
-  Frederik Neuwahl, Joseph Francois, et~al.
+\bibitem[Song et~al.(2005)Song, Havlin, and Makse]{song2005self}
+C.~Song, S.~Havlin, and H.~A. Makse.
+\newblock Self-similarity of complex networks.
+\newblock \emph{Nature}, 433\penalty0 (7024):\penalty0 392--395, 2005.
+
+\bibitem[Timmer et~al.(2012)Timmer, Erumban, Gouma, Los, Temurshoev, de~Vries,
+  Arto, Genty, Neuwahl, Francois, et~al.]{timmer2012world}
+M.~Timmer, A.~A. Erumban, R.~Gouma, B.~Los, U.~Temurshoev, G.~J. de~Vries,
+  I.-a. Arto, V.~A.~A. Genty, F.~Neuwahl, J.~Francois, et~al.
 \newblock The world input-output database (wiod): contents, sources and
   methods.
 \newblock Technical report, Institue for International and Development

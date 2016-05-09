@@ -8,44 +8,33 @@ import java.util.PriorityQueue;
 import java.util.Random;
 
 import com.meissereconomics.seminar.flow.MaxFlow;
-import com.meissereconomics.seminar.util.InstantiatingHashmap;
 
 public class Country implements Comparable<Country> {
 
+	private final int countries;
+	private final int number;
 	private String name;
-	private InstantiatingHashmap<String, Node> nodes;
-	private ArrayList<Node> nodeList;
+	private Nodes nodes;
 
-	public Country(String name) {
+	public Country(String name, int number, int countries) {
 		assert name.length() > 0;
+		assert number < 50; // wiod
 		this.name = name;
-		this.nodes = new InstantiatingHashmap<String, Node>() {
-
-			@Override
-			protected Node createValue(String key) {
-				Country.this.nodeList = null;
-				return new Node(Country.this, key);
-			}
-		};
+		this.number = number;
+		this.countries = countries;
+		this.nodes = new Nodes(this);
+	}
+	
+	public int getNumber(){
+		return number;
 	}
 
 	public ArrayList<Node> getNodeList() {
-		if (nodeList == null) {
-			nodeList = new ArrayList<>();
-			for (Node n : nodes.values()) {
-				nodeList.add(n);
-				if (n.isConsumption()) {
-					int pos = nodeList.size() - 1;
-					nodeList.set(pos, nodeList.get(0));
-					nodeList.set(0, n);
-				}
-			}
-		}
-		return nodeList;
+		return nodes.getList();
 	}
 
 	public Node getNode(String industry) {
-		return nodes.obtain(industry);
+		return nodes.get(industry);
 	}
 
 	public double getImports() {
@@ -61,8 +50,15 @@ public class Country implements Comparable<Country> {
 		return sum;
 	}
 
+	private int modcount;
+	private double exports;
+
 	public double getExports() {
-		return getNodeList().stream().mapToDouble(Node::getExports).sum();
+		int mods = nodes.getModCount();
+		if (mods != modcount) {
+			exports = getNodeList().stream().mapToDouble(Node::getExports).sum();
+		}
+		return exports;
 	}
 
 	public double getConsumption() {
@@ -77,15 +73,9 @@ public class Country implements Comparable<Country> {
 		return diff;
 	}
 
-	public void updateComposition() {
-		for (Node n : getNodeList()) {
-			n.updateComposition();
-		}
-	}
-
 	public void mergeConsumption() {
 		Node consumption = new Node(this, Node.CONSUMPTION_TYPES[0]);
-		assert!nodes.containsKey(consumption.getIndustry());
+		assert !nodes.contains(consumption.getIndustry());
 		Iterator<Node> iter = nodes.values().iterator();
 		double exp = getExports();
 		while (iter.hasNext()) {
@@ -97,7 +87,6 @@ public class Country implements Comparable<Country> {
 			assert Math.abs(exp - getExports()) < 0.01;
 		}
 		this.nodes.put(Node.CONSUMPTION_TYPES[0], consumption);
-		this.nodeList = null;
 	}
 
 	public String getStats() {
@@ -138,7 +127,7 @@ public class Country implements Comparable<Country> {
 	}
 
 	public Composition getOriginOf(String category) {
-		if (nodes.containsKey(category)) {
+		if (nodes.contains(category)) {
 			return nodes.get(category).getOrigin();
 		} else {
 			return null;
@@ -160,7 +149,6 @@ public class Country implements Comparable<Country> {
 			n1.absorb(n2, level);
 			nodes.add(n1);
 			this.nodes.remove(n2.getIndustry());
-			this.nodeList = null;
 		}
 	}
 
@@ -184,14 +172,13 @@ public class Country implements Comparable<Country> {
 			secondSmallest.absorb(smallest, level);
 			nodes.add(secondSmallest);
 			this.nodes.remove(smallest.getIndustry());
-			this.nodeList = null;
 		}
 	}
 
 	public double getMaxDomesticFlow(boolean imports) {
 		return new MaxFlow(this, imports).calculateMaxFlow();
 	}
-	
+
 	public Node getConsumptionNode() {
 		return getNode(Node.CONSUMPTION_TYPES[0]);
 	}
@@ -200,7 +187,6 @@ public class Country implements Comparable<Country> {
 		double difference = 1.0;
 		while (difference >= 0.001) {
 			difference = calculateComposition(mode, consumptionPreference);
-			updateComposition();
 		}
 	}
 
@@ -210,6 +196,10 @@ public class Country implements Comparable<Country> {
 
 	public double getImportReuse() {
 		return getReusedImports() / getExports();
+	}
+
+	public int getCountries() {
+		return countries;
 	}
 
 }

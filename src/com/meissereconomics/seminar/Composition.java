@@ -1,109 +1,85 @@
 package com.meissereconomics.seminar;
 
-import java.util.Map;
-import java.util.function.ObjDoubleConsumer;
-
-import net.openhft.koloboke.collect.map.hash.HashObjDoubleMap;
-import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;
-import net.openhft.koloboke.function.ObjDoubleToDoubleFunction;
-
 public class Composition {
 
-	private Country home;
-	private boolean normalized;
+	private int home;
 	private double directConsumption;
-	private HashObjDoubleMap<Country> shares;
+	private double[] shares;
+	private boolean normalized;
 
-	public Composition(Country country) {
-		this.shares = HashObjDoubleMaps.newMutableMap();
-		this.shares.put(country, 1.0);
-		this.home = country;
-		this.normalized = true;
+	public Composition(int countries, int home) {
+		this.shares = new double[countries];
+		this.shares[home] = 1.0;
+		this.home = home;
 		this.directConsumption = 0.0;
+		this.normalized = true;
 	}
 
-	public Composition(Country country, double value) {
-		this.home = country;
-		this.shares = HashObjDoubleMaps.newMutableMap();
-		assert!Double.isNaN(value);
-		this.shares.put(country, value);
-		this.normalized = false;
+	public Composition(int countries, int home, double value) {
+		this.home = home;
+		this.shares = new double[countries];
+		this.shares[home] =  value;
 		this.directConsumption = 0.0;
+		this.normalized = false;
+	}
+
+	private boolean isNormalized() {
+		return normalized;
 	}
 
 	public void include(Composition source, final double value) {
-		assert value >= 0.0;
+		assert !normalized;
 		assert source.normalized;
-		assert!normalized;
-		source.shares.forEach(new ObjDoubleConsumer<Country>() {
-
-			@Override
-			public void accept(Country t, double u) {
-				double current = Composition.this.getShare(t);
-				double newValue = current + u * value;
-				assert!Double.isNaN(newValue);
-				Composition.this.shares.put(t, newValue);
-			}
-		});
+		assert value >= 0.0;
+		for (int i=0; i<shares.length; i++){
+			double sourceShare = source.shares[i];
+			this.shares[i] = this.shares[i] + sourceShare * value;
+		}
 	}
 
 	public void normalize() {
-		final double[] sum = new double[1];
-		this.shares.forEach(new ObjDoubleConsumer<Country>() {
-
-			@Override
-			public void accept(Country t, double u) {
-				sum[0] += u;
-			}
-		});
-		this.shares.replaceAll(new ObjDoubleToDoubleFunction<Country>() {
-
-			@Override
-			public double applyAsDouble(Country a, double b) {
-				assert sum[0] > 0.0;
-				return b / sum[0];
-			}
-		});
+		assert !normalized;
+		double sum = 0.0;
+		for (double s: shares){
+			sum += s;
+		}
+		for (int i=0; i<shares.length; i++){
+			this.shares[i] /= sum;
+		}
 		this.normalized = true;
 	}
 
 	public double diff(Composition origin) {
 		double difference = 0.0;
-		for (Map.Entry<Country, Double> e : shares.entrySet()) {
-			difference = Math.max(difference, Math.abs(e.getValue() - origin.getShare(e.getKey())));
+		for (int i=0; i<shares.length; i++){
+			difference = Math.max(difference, Math.abs(shares[i] - origin.shares[i]));
 		}
 		return difference;
 	}
 
 	public double getImportReuse() {
-		if (normalized) {
-			return 1.0 - shares.getDouble(home);
+		if (isNormalized()) {
+			return 1.0 - shares[home];
 		} else {
-			return Double.NaN;
+			return Float.NaN;
 		}
 	}
 
-	public double getShare(Country key) {
-		Double diff = Composition.this.shares.getDouble(key);
-		assert!Double.isNaN(diff);
-		return diff;
+	public void redirectDomesticInputs(double consumption, EFlowBendingMode mode, double degree) {
+		assert !isNormalized();
+		double domestic = shares[home];
+		this.directConsumption = mode.calculate(consumption, domestic, degree);
+		double share = domestic - directConsumption;
+		this.shares[home] = Math.max(0.0, share);
+	}
+
+	public int getCountryCount() {
+		return shares.length;
 	}
 
 	@Override
 	public String toString() {
-		return normalized ? getImportReuse() + "\timport reuse" : shares.toString();
-	}
-
-	public void redirectDomesticInputs(double consumption, EFlowBendingMode mode, double degree) {
-		assert!normalized;
-		double domestic = shares.getDouble(home);
-		this.directConsumption = mode.calculate(consumption, domestic, degree);
-		double share = domestic - directConsumption;
-		if (share <= 0.0) {
-			shares.removeAsDouble(home);
-		} else {
-			shares.put(home, share);
-		}
+		return isNormalized() ? getImportReuse() + "\timport reuse" : shares.toString();
 	}
 
 }

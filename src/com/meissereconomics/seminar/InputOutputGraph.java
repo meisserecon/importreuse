@@ -18,13 +18,16 @@ import com.meissereconomics.seminar.util.InstantiatingHashmap;
 
 public class InputOutputGraph {
 
+	public static final int COUNTRIES = 41;
 	public static final int SECTORS = 35;
 
 	private InstantiatingHashmap<String, Country> countries = new InstantiatingHashmap<String, Country>() {
 
+		private int count = 0;
+		
 		@Override
 		protected Country createValue(String name) {
-			return new Country(name);
+			return new Country(name, count++, COUNTRIES);
 		}
 	};
 
@@ -117,9 +120,6 @@ public class InputOutputGraph {
 			difference = 0.0;
 			for (Country c : countries.values()) {
 				difference = Math.max(c.calculateComposition(mode, consumptionPreference), difference);
-			}
-			for (Country c : countries.values()) {
-				c.updateComposition();
 			}
 		}
 	}
