@@ -14,9 +14,6 @@ public class MemTest {
 		printMem();
 		g.collapseRandomSectors(13, 1);
 		printMem();
-		while (true){
-			Thread.sleep(1000);
-		}
 	}
 
 	private static void printMem() {

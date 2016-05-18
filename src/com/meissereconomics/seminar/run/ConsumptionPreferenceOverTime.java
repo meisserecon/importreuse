@@ -17,10 +17,16 @@ import net.openhft.koloboke.collect.map.ObjDoubleMap;
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;
 
 /**
+ * Generates output ConsumptionPreferenceOverTime.out, which contains the raw data for the
+ * results/reusedrivers.* files.
+ * 
+ * Running this this took about 12 hours, giving the process 8 GB of RAM. For faster runs that
+ * consume less memory, feel free to reduce the RUNS parameter from 5 to 1, reducing accuracy.
  */
 public class ConsumptionPreferenceOverTime {
 
-	private static final double DEFAULT_BENDING = 0.0;
+	private static final double DEFAULT_BENDING = 0.6;
+	private static final int RUNS = 6;
 	private static final double EPSILON = 0.001;
 	private static final EFlowBendingMode MODE = EFlowBendingMode.DEFAULT;
 
@@ -31,7 +37,7 @@ public class ConsumptionPreferenceOverTime {
 
 	public ConsumptionPreferenceOverTime(int seed, int year, int runs) throws FileNotFoundException, IOException {
 		this.year = year;
-		String file = getFilename(year);
+		String file = Formatter.getFilename(year);
 		// System.out.println("Processing file " + file);
 		this.levels = new double[InputOutputGraph.SECTORS];
 		this.bendings = HashObjDoubleMaps.newMutableMap();
@@ -41,8 +47,8 @@ public class ConsumptionPreferenceOverTime {
 		for (int i = 0; i < graphs.length; i++) {
 			int sector = i + 1;
 			this.levels[i] = sector;
+			System.out.println("Loading " + sector);
 			for (int run = 0; run < runs; run++) {
-				System.out.println("Loading " + sector + " - " + run);
 				InputOutputGraph graph = new InputOutputGraph(file);
 				graph.collapseRandomSectors(run * 31 + seed * 12313, sector);
 				if (sector == InputOutputGraph.SECTORS && run == 0) {
@@ -64,18 +70,6 @@ public class ConsumptionPreferenceOverTime {
 		}
 	}
 
-	private static String getFilename(int year) {
-		if (year <= 1999) {
-			return "data/wiot" + (year - 1900) + "_row_apr12.csv";
-		} else if (year <= 2007) {
-			return "data/wiot0" + (year - 2000) + "_row_apr12.csv";
-		} else if (year <= 2009) {
-			return "data/wiot0" + (year - 2000) + "_row_sep12.csv";
-		} else {
-			return "data/wiot" + (year - 2000) + "_row_sep12.csv";
-		}
-	}
-
 	public void optimizeAll() {
 		for (String country : bendings.keySet()) {
 			optimizeCountry(country);
@@ -92,9 +86,11 @@ public class ConsumptionPreferenceOverTime {
 			double variance = new Variance().evaluate(reuses);
 			double covariance = new Covariance().covariance(levels, reuses);
 			double leontiefReuse = leontief.getDouble(country);
-			Country c = graphs[0][0].getCountry(country);
+			Country c = graphs[InputOutputGraph.SECTORS - 1][0].getCountry(country);
 			double exports = c.getExports();
-			System.out.println(Formatter.toTabs(year, country, bending, reuse, variance, covariance, exports, c.getImports(), c.getConsumption(), c.getMaxDomesticFlow(true) / exports, leontiefReuse));
+			double maxreuse = c.getMaxReusedImports() / exports;
+			double minreuse = c.getMinReusedImports() / exports;
+			System.out.println(Formatter.toTabs(year, country, bending, reuse, variance, covariance, exports, c.getImports(), c.getConsumption(), maxreuse, minreuse, leontiefReuse));
 		}
 	}
 
@@ -155,7 +151,7 @@ public class ConsumptionPreferenceOverTime {
 	protected double calculateCovariance(String country, double bending) {
 		for (InputOutputGraph[] graphs : this.graphs) {
 			for (InputOutputGraph graph : graphs) {
-				graph.getCountry(country).deriveOrigins(MODE, bending);
+				graph.getCountry(country).deriveOrigins(MODE, bending, EPSILON);
 			}
 		}
 		double cov = new Covariance().covariance(levels, calculateReuse(country));
@@ -180,9 +176,9 @@ public class ConsumptionPreferenceOverTime {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		long t0 = System.nanoTime();
-		System.out.println("Year\tCountry\tBending\tReuse\tVariance\tCovariance\tExports\tImports\tConsumption\tMax flow reuse\tLeontief Reuse");
-		for (int year = 1995; year <= 2011; year++) {
-			ConsumptionPreferenceOverTime bendings = new ConsumptionPreferenceOverTime(13, year, 5);
+		System.out.println("Year\tCountry\tBending\tReuse\tVariance\tCovariance\tExports\tImports\tConsumption\tMax Flow Reuse\tMin Flow Reuse\tLeontief Reuse");
+		for (int year = 2011; year >= 1995; year--) {
+			ConsumptionPreferenceOverTime bendings = new ConsumptionPreferenceOverTime(11233, year, RUNS);
 			bendings.optimizeAll();
 			bendings.printAll();
 			System.out.println("Processed " + year + " after " + (System.nanoTime() - t0)/1000000 + "ms");

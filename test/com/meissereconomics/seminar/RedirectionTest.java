@@ -19,13 +19,23 @@ public class RedirectionTest {
 		stage2.linkTo(stage3, 150);
 		stage3.linkTo(home.getConsumptionNode(), 50);
 		stage3.linkTo(other.getConsumptionNode(), 100);
+		double reuse = calcReuse(home, EFlowBendingMode.VERTICAL_IN, 1.0);
+		for (EFlowBendingMode m: EFlowBendingMode.values()){
+			assert reuse == calcReuse(home, m, 1.0);
+		}
+		reuse = calcReuse(home, EFlowBendingMode.VERTICAL_IN, 0.0);
+		for (EFlowBendingMode m: EFlowBendingMode.values()){
+			assert reuse == calcReuse(home, m, 0.0);
+		}
+	}
+
+	protected double calcReuse(Country home, EFlowBendingMode mode, double extent) {
 		double diff = 1.0;
 		while (diff >= 0.001){
-			diff = home.calculateComposition(EFlowBendingMode.BOTH, 1.0);
+			diff = home.calculateComposition(mode, extent);
 		}
 		double reuse = home.getReusedImports() / home.getExports();
-		assert reuse >= 0.999;
-		
+		return reuse;
 	}
 
 }

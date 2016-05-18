@@ -174,18 +174,31 @@ public class Country implements Comparable<Country> {
 			this.nodes.remove(smallest.getIndustry());
 		}
 	}
-
-	public double getMaxDomesticFlow(boolean imports) {
-		return new MaxFlow(this, imports).calculateMaxFlow();
+	
+	public double getMaxProcessingTrade(){
+		return new MaxFlow(this, true, true).calculateMaxFlow();
+	}
+	
+	public double getMaxImportConsumption(){
+		return new MaxFlow(this, true, false).calculateMaxFlow();
+	}
+	
+	public double getMaxReusedImports(){
+		return getMaxProcessingTrade();
+	}
+	
+	public double getMinReusedImports(){
+		double imports = getImports();
+		return Math.max(0.0, imports - getMaxImportConsumption()); // to get rid of rounding errors that push value below 0
 	}
 
 	public Node getConsumptionNode() {
 		return getNode(Node.CONSUMPTION_TYPES[0]);
 	}
 
-	public void deriveOrigins(EFlowBendingMode mode, double consumptionPreference) {
+	public void deriveOrigins(EFlowBendingMode mode, double consumptionPreference, double epsilon) {
 		double difference = 1.0;
-		while (difference >= 0.001) {
+		while (difference >= epsilon) {
 			difference = calculateComposition(mode, consumptionPreference);
 		}
 	}

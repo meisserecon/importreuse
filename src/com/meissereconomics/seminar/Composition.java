@@ -3,23 +3,25 @@ package com.meissereconomics.seminar;
 public class Composition {
 
 	private int home;
-	private double directConsumption;
 	private double[] shares;
 	private boolean normalized;
+	private double input, output, consumption;
 
 	public Composition(int countries, int home) {
 		this.shares = new double[countries];
 		this.shares[home] = 1.0;
 		this.home = home;
-		this.directConsumption = 0.0;
 		this.normalized = true;
 	}
 
-	public Composition(int countries, int home, double value) {
+	public Composition(int countries, int home, double input, double output, double consumption) {
 		this.home = home;
+		this.input = input;
+		this.output = output;
+		this.consumption = consumption;
 		this.shares = new double[countries];
-		this.shares[home] =  value;
-		this.directConsumption = 0.0;
+		this.shares[home] = output + consumption - input;
+		assert !Double.isNaN(this.shares[home]);
 		this.normalized = false;
 	}
 
@@ -43,6 +45,11 @@ public class Composition {
 		for (double s: shares){
 			sum += s;
 		}
+		if (sum == 0.0){
+			sum = 1.0;
+			this.shares[home] = 1.0;
+		}
+		assert !Double.isNaN(sum);
 		for (int i=0; i<shares.length; i++){
 			this.shares[i] /= sum;
 		}
@@ -65,12 +72,13 @@ public class Composition {
 		}
 	}
 
-	public void redirectDomesticInputs(double consumption, EFlowBendingMode mode, double degree) {
+	public void redirectDomesticInputs(EFlowBendingMode mode, double degree) {
 		assert !isNormalized();
-		double domestic = shares[home];
-		this.directConsumption = mode.calculate(consumption, domestic, degree);
-		double share = domestic - directConsumption;
-		this.shares[home] = Math.max(0.0, share);
+		this.shares[home] -= mode.calculateDirectConsumption(shares[home], input, output, consumption, degree);
+		assert !Double.isNaN(this.shares[home]);
+		if (this.shares[home] < 0.0){
+			this.shares[home] = 0.0; // fix rounding errors.
+		}
 	}
 
 	public int getCountryCount() {

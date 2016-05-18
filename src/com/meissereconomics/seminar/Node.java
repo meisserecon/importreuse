@@ -16,9 +16,13 @@ import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;
 
 public class Node {
 
-	public final static String[] CONSUMPTION_TYPES = { "Consumption and capital formation", "Final consumption expenditure by households",
-			"Final consumption expenditure by non-profit organisations serving households (NPISH)", "Final consumption expenditure by government", "Gross fixed capital formation",
-			"Changes in inventories and valuables" };
+	public final static String[] CONSUMPTION_TYPES = {
+			// WIOD
+			"Consumption and capital formation", "Final consumption expenditure by households", "Final consumption expenditure by non-profit organisations serving households (NPISH)",
+			"Final consumption expenditure by government", "Gross fixed capital formation", "Changes in inventories and valuables",
+			// OECD
+			"CONS: Consumption expenditure", "GFCF: Gross Fixed Capital Formation", "INVNT: Changes in inventories", "CONS_ABR: Direct purchases abroad by residents (imports)",
+			"CONS_NONRES: Direct purchases by non-residents (exports)" };
 
 	{
 		for (int i = 0; i < CONSUMPTION_TYPES.length; i++) {
@@ -51,10 +55,20 @@ public class Node {
 		});
 	}
 
-	public double calculateComposition(Node consumption, EFlowBendingMode mode, double localConsumptionPreference) {
-		double value = Math.max(0, getCreatedValue());
+	public double getCreatedValue() {
+		if (isConsumption()) {
+			return 0.0;
+		} else {
+			return getOutputs() - getInputs();
+		}
+	}
 
-		Composition comp = new Composition(origin.getCountryCount(), country.getNumber(), value);
+	public double calculateComposition(Node consumption, EFlowBendingMode mode, double extent) {
+		double input = getInputs();
+		double cons = consumption == this ? input : outputs.getDouble(consumption);
+		double output = consumption == this ? 0.0 : getOutputs() - cons;
+
+		Composition comp = new Composition(origin.getCountryCount(), country.getNumber(), input, output, cons);
 		inputs.forEach(new ObjDoubleConsumer<Node>() {
 
 			@Override
@@ -62,7 +76,9 @@ public class Node {
 				comp.include(t.getOrigin(), value);
 			}
 		});
-		comp.redirectDomesticInputs(outputs.getDouble(consumption), mode, localConsumptionPreference);
+		if (!isConsumption()) {
+			comp.redirectDomesticInputs(mode, extent);
+		}
 		comp.normalize();
 		double difference = comp.diff(origin);
 		this.origin = comp;
@@ -155,19 +171,15 @@ public class Node {
 		outputs.shrink();
 	}
 
-	public double getCreatedValue() {
-		return getOutputs() - getInputs();
-	}
-
 	public Country getCountry() {
 		return country;
 	}
 
 	public void linkTo(Node node, double millions) {
-		assert!Double.isNaN(millions);
-		assert!this.outputs.containsKey(node);
+		assert !Double.isNaN(millions);
+		assert !this.outputs.containsKey(node);
 		this.outputs.put(node, millions);
-		assert!node.inputs.containsKey(this);
+		assert !node.inputs.containsKey(this);
 		node.inputs.put(this, millions);
 	}
 
@@ -213,7 +225,9 @@ public class Node {
 
 			@Override
 			public double applyAsDouble(Entry<Node, Double> value) {
-				return value.getValue().doubleValue() * origin.getImportReuse();
+				double v = value.getValue().doubleValue() * origin.getImportReuse();
+				assert !Double.isNaN(v);
+				return v;
 			}
 		}).sum();
 	}
@@ -287,8 +301,8 @@ public class Node {
 	 * 
 	 */
 	public DoubleArray[] getRelativeShares(final Node other, final boolean input) {
-		assert!isConsumption();
-		assert!other.isConsumption();
+		assert !isConsumption();
+		assert !other.isConsumption();
 		assert other.country == country;
 		final DoubleArray domestic = new ResizableDoubleArray();
 		final DoubleArray foreign = new ResizableDoubleArray();
@@ -309,7 +323,7 @@ public class Node {
 			private DoubleArray getTarget(Node t) {
 				boolean sameCountry = t.country == country;
 				boolean consumption = t.isConsumption();
-				assert!(input && consumption);
+				assert !(input && consumption);
 				if (sameCountry) {
 					return consumption ? domesticConsumption : domestic;
 				} else {

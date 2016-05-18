@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import com.meissereconomics.seminar.flow.MaxFlow;
+
 public class NodeTest {
 
 	private static final String CON = Node.CONSUMPTION_TYPES[0];
@@ -31,13 +33,13 @@ public class NodeTest {
 	@Test
 	public void testFlow() {
 		Country c = createCountries()[0];
-		double maxDomesticConsumption = c.getMaxDomesticFlow(false);
-		double maxImportReuse = c.getMaxDomesticFlow(true);
+		double maxDomesticConsumption = new MaxFlow(c, false, false).calculateMaxFlow();
+		double maxImportReuse = new MaxFlow(c, true, true).calculateMaxFlow();
 		System.out.println(maxDomesticConsumption);
 		System.out.println(maxImportReuse);
 		assert equals(c.getImports() + c.getCreatedValue(), c.getExports() + c.getConsumption());
 		assert equals(c.getExports() - (c.getCreatedValue() - maxDomesticConsumption), maxImportReuse);
-		c.deriveOrigins(EFlowBendingMode.BOTH, 1.0);
+		c.deriveOrigins(EFlowBendingMode.VERTICAL_IN, 1.0, ACCURACY);
 		assert equals(maxImportReuse, c.getReusedImports());
 	}
 
@@ -52,7 +54,7 @@ public class NodeTest {
 		double diff = 1.0;
 		while (diff > ACCURACY) {
 			for (Country c : cs) {
-				diff = c.calculateComposition(EFlowBendingMode.BOTH, 0.0);
+				diff = c.calculateComposition(EFlowBendingMode.VERTICAL_IN, 0.0);
 			}
 		}
 	}

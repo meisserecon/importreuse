@@ -1,136 +1,136 @@
-Run 0 completed after 115244ms
-Run 1 completed after 222081ms
-Run 2 completed after 333748ms
-Run 3 completed after 448625ms
-Run 4 completed after 563200ms
-Run 5 completed after 669854ms
-Run 6 completed after 790933ms
-Run 7 completed after 900748ms
-Run 8 completed after 1017906ms
-Run 9 completed after 1133322ms
-Run 10 completed after 1250967ms
-Run 11 completed after 1366440ms
-Run 12 completed after 1480605ms
-Run 13 completed after 1594091ms
-Run 14 completed after 1707799ms
-Run 15 completed after 1821823ms
-Run 16 completed after 1938117ms
-Run 17 completed after 2058901ms
-Run 18 completed after 2169790ms
-Run 19 completed after 2281412ms
-Run 20 completed after 2393034ms
-Run 21 completed after 2505698ms
-Run 22 completed after 2615774ms
-Run 23 completed after 2731233ms
-Run 24 completed after 2841306ms
-Run 25 completed after 2960444ms
-Run 26 completed after 3072056ms
-Run 27 completed after 3186929ms
-Run 28 completed after 3296029ms
-Run 29 completed after 3412422ms
-Run 30 completed after 3528406ms
-Run 31 completed after 3639030ms
-Run 32 completed after 3752034ms
-Run 33 completed after 3858475ms
-Run 34 completed after 3969082ms
-Run 35 completed after 4075804ms
-Run 36 completed after 4195988ms
-Run 37 completed after 4305986ms
-Run 38 completed after 4454347ms
-Run 39 completed after 4580678ms
-Run 40 completed after 4699677ms
-Run 41 completed after 4812284ms
-Run 42 completed after 4927975ms
-Run 43 completed after 5039536ms
-Run 44 completed after 5154747ms
-Run 45 completed after 5266608ms
-Run 46 completed after 5377263ms
-Run 47 completed after 5486570ms
-Run 48 completed after 5600139ms
-Run 49 completed after 5725785ms
-Run 50 completed after 5837825ms
-Run 51 completed after 5960474ms
-Run 52 completed after 6071332ms
-Run 53 completed after 6189266ms
-Run 54 completed after 6303718ms
-Run 55 completed after 6425660ms
-Run 56 completed after 6551950ms
-Run 57 completed after 6675818ms
-Run 58 completed after 6800042ms
-Run 59 completed after 6916615ms
-Run 60 completed after 7032695ms
-Run 61 completed after 7148418ms
-Run 62 completed after 7269493ms
-Run 63 completed after 7381963ms
-Run 64 completed after 7500386ms
-Run 65 completed after 7622796ms
-Run 66 completed after 7728947ms
-Run 67 completed after 7850882ms
-Run 68 completed after 7957931ms
-Run 69 completed after 8076026ms
-Run 70 completed after 8191981ms
-Run 71 completed after 8303159ms
-Run 72 completed after 8421189ms
-Run 73 completed after 8541703ms
-Run 74 completed after 8658668ms
-Run 75 completed after 8768978ms
-Run 76 completed after 8887717ms
-Run 77 completed after 8993911ms
-Run 78 completed after 9103943ms
-Run 79 completed after 9226119ms
-Run 80 completed after 9354635ms
-Run 81 completed after 9465586ms
-Run 82 completed after 9580554ms
-Run 83 completed after 9691969ms
-Run 84 completed after 9807471ms
-Run 85 completed after 9922068ms
-Run 86 completed after 10037166ms
-Run 87 completed after 10156126ms
-Run 88 completed after 10268051ms
-Run 89 completed after 10380982ms
-Run 90 completed after 10496639ms
-Run 91 completed after 10608134ms
-Run 92 completed after 10726120ms
-Run 93 completed after 10838074ms
-Run 94 completed after 10952601ms
-Run 95 completed after 11063691ms
-Run 96 completed after 11175813ms
-Run 97 completed after 11284945ms
-Run 98 completed after 11396404ms
-Run 99 completed after 11508652ms
+Run 0 completed after 13886ms
+Run 1 completed after 27298ms
+Run 2 completed after 40657ms
+Run 3 completed after 53463ms
+Run 4 completed after 66515ms
+Run 5 completed after 79988ms
+Run 6 completed after 92738ms
+Run 7 completed after 105551ms
+Run 8 completed after 118597ms
+Run 9 completed after 131439ms
+Run 10 completed after 144257ms
+Run 11 completed after 157188ms
+Run 12 completed after 170122ms
+Run 13 completed after 183056ms
+Run 14 completed after 195965ms
+Run 15 completed after 208750ms
+Run 16 completed after 221210ms
+Run 17 completed after 233813ms
+Run 18 completed after 246571ms
+Run 19 completed after 259204ms
+Run 20 completed after 271719ms
+Run 21 completed after 284650ms
+Run 22 completed after 297507ms
+Run 23 completed after 310256ms
+Run 24 completed after 322970ms
+Run 25 completed after 335703ms
+Run 26 completed after 348493ms
+Run 27 completed after 361567ms
+Run 28 completed after 374563ms
+Run 29 completed after 387259ms
+Run 30 completed after 399820ms
+Run 31 completed after 412454ms
+Run 32 completed after 425258ms
+Run 33 completed after 438165ms
+Run 34 completed after 450729ms
+Run 35 completed after 463412ms
+Run 36 completed after 476063ms
+Run 37 completed after 489185ms
+Run 38 completed after 501964ms
+Run 39 completed after 514975ms
+Run 40 completed after 527859ms
+Run 41 completed after 540985ms
+Run 42 completed after 554026ms
+Run 43 completed after 566955ms
+Run 44 completed after 580038ms
+Run 45 completed after 592876ms
+Run 46 completed after 605916ms
+Run 47 completed after 618816ms
+Run 48 completed after 631429ms
+Run 49 completed after 644363ms
+Run 50 completed after 657001ms
+Run 51 completed after 670074ms
+Run 52 completed after 682819ms
+Run 53 completed after 695450ms
+Run 54 completed after 707674ms
+Run 55 completed after 722111ms
+Run 56 completed after 735729ms
+Run 57 completed after 749298ms
+Run 58 completed after 762904ms
+Run 59 completed after 776330ms
+Run 60 completed after 790541ms
+Run 61 completed after 804496ms
+Run 62 completed after 818744ms
+Run 63 completed after 831989ms
+Run 64 completed after 844969ms
+Run 65 completed after 857954ms
+Run 66 completed after 870631ms
+Run 67 completed after 883608ms
+Run 68 completed after 896333ms
+Run 69 completed after 909264ms
+Run 70 completed after 922297ms
+Run 71 completed after 935173ms
+Run 72 completed after 947849ms
+Run 73 completed after 961059ms
+Run 74 completed after 973282ms
+Run 75 completed after 986101ms
+Run 76 completed after 999045ms
+Run 77 completed after 1011776ms
+Run 78 completed after 1024340ms
+Run 79 completed after 1036987ms
+Run 80 completed after 1049979ms
+Run 81 completed after 1062338ms
+Run 82 completed after 1075128ms
+Run 83 completed after 1087518ms
+Run 84 completed after 1100290ms
+Run 85 completed after 1112907ms
+Run 86 completed after 1126048ms
+Run 87 completed after 1139563ms
+Run 88 completed after 1153750ms
+Run 89 completed after 1168375ms
+Run 90 completed after 1183224ms
+Run 91 completed after 1198481ms
+Run 92 completed after 1212763ms
+Run 93 completed after 1226946ms
+Run 94 completed after 1241464ms
+Run 95 completed after 1255906ms
+Run 96 completed after 1269842ms
+Run 97 completed after 1283779ms
+Run 98 completed after 1298281ms
+Run 99 completed after 1312546ms
 Resolution	Mean Import Reuse	Variance
-1	0.17118545848406114	1.6005541943345825E-8
-2	0.17343577736937849	3.9238800890895355E-6
-3	0.17584172443478405	6.8503488575587054E-6
-4	0.17820381585481007	9.242386722728138E-6
-5	0.1808784962366833	1.0264757145778656E-5
-6	0.1833025316701599	1.2237381023180675E-5
-7	0.1857180937019915	1.3830093339881058E-5
-8	0.18846134813309737	1.791016267932677E-5
-9	0.19097189718439386	1.6364242135792805E-5
-10	0.19350985907099685	1.4296797343817484E-5
-11	0.19623817237916297	1.5894028553500704E-5
-12	0.1986069793980401	1.545289724892603E-5
-13	0.20097550905155975	1.5282341139907068E-5
-14	0.2031425304294139	1.57373408644671E-5
-15	0.20558031700311014	1.6282330526549643E-5
-16	0.20778682676662139	1.5503354017133737E-5
-17	0.21000941447784346	1.6586661547755958E-5
-18	0.2122390836452987	1.6291813254986222E-5
-19	0.21433776167459984	1.6678410095834765E-5
-20	0.21656629011566972	1.2326691010739221E-5
-21	0.2187792047548852	1.2247625284883405E-5
-22	0.22089390199560022	1.3646177045108816E-5
-23	0.2229866090858159	1.2699861056628674E-5
-24	0.22494730189332465	1.2257736904370503E-5
-25	0.22706087564659524	1.1076397606887018E-5
-26	0.22888420341990412	1.0219219285380342E-5
-27	0.2308899344792102	9.664827667320159E-6
-28	0.23281644769226978	1.0106637302875411E-5
-29	0.23474962715279454	9.31285019405007E-6
-30	0.23641486792604177	8.04381204036771E-6
-31	0.23833833791257322	5.771625763692754E-6
-32	0.24007748633897139	4.229330605369209E-6
-33	0.24178489686217716	2.5968631721187226E-6
-34	0.2435837915391771	1.6922704566109723E-6
-35	0.24453212157683624	2.5756881276451518E-33
+1	0.17404383769057333	2.988213184124595E-8
+2	0.17689790086043022	2.6391364533720468E-6
+3	0.1795858932139019	4.390429256585686E-6
+4	0.18231455148287856	7.431018244975676E-6
+5	0.18507265744468696	9.120839613818388E-6
+6	0.18762059483713994	1.0372206566390734E-5
+7	0.1899812328185373	1.1795752770115081E-5
+8	0.19253374544212204	1.3093662099031007E-5
+9	0.1950928821812236	1.2508981683271212E-5
+10	0.19749695667797462	1.2243611762191967E-5
+11	0.19980536972300159	1.2330525478029585E-5
+12	0.2022632310555273	1.2980158130936653E-5
+13	0.2048326069979146	1.3910480329868669E-5
+14	0.20700160755656957	1.3830674120244621E-5
+15	0.20951459202034395	1.4177787909050973E-5
+16	0.2116824457375428	1.5333727361419085E-5
+17	0.21401370936207184	1.4186548962411635E-5
+18	0.2159314949268829	1.2952228363392885E-5
+19	0.21811349032048505	1.2682988784578814E-5
+20	0.2201461068565263	1.2172772095477135E-5
+21	0.22222729279131143	1.1558375593906234E-5
+22	0.2243008643696045	1.1208116624666962E-5
+23	0.22638627339463446	1.0198618208975014E-5
+24	0.22839511018610098	9.835703860738699E-6
+25	0.23027214810244045	9.705544355399804E-6
+26	0.2322419967738242	9.450185809138274E-6
+27	0.23403463033768	8.672803032059083E-6
+28	0.2359822236083741	7.538829532498707E-6
+29	0.2378598686593317	6.714477430638774E-6
+30	0.2397294991386828	5.527301487794556E-6
+31	0.24156632068195383	4.307008366345901E-6
+32	0.24329915469340485	2.6165056770387873E-6
+33	0.2452912058952541	1.3093093014006384E-6
+34	0.24695151406150237	8.577820906025116E-7
+35	0.247812680996901	2.5469742630197422E-33

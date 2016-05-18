@@ -19,13 +19,17 @@ public class TableKey {
 
 	public TableKey derive(String what, String current) {
 		String[] keys = new String[this.keys.length];
+		boolean found = false;
 		for (int i=0; i<keys.length; i++){
 			if (labels[i].equals(what)){
+				assert !found;
 				keys[i] = current;
+				found = true;
 			} else {
 				keys[i] = this.keys[i];
 			}
 		}
+		assert found;
 		return new TableKey(labels, keys);
 	}
 

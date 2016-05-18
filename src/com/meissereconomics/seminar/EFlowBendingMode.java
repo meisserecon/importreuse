@@ -1,21 +1,53 @@
 package com.meissereconomics.seminar;
 
 public enum EFlowBendingMode {
-	
-	INPUTS, CONSUMPTION, BOTH;
-	
-	public static final EFlowBendingMode DEFAULT = EFlowBendingMode.INPUTS;
 
-	public double calculate(double consumption, double input, double degree) {
+	HORIZONTAL_IN, HORIZONTAL_OUT, HORIZONTAL_MID, VERTICAL_IN, VERTICAL_OUT, VERTICAL_MID, IMPORTS_AWARE_CON, IMPORTS_AWARE_IN, IMPORTS_AWARE_MID;
+
+	public static final EFlowBendingMode DEFAULT = EFlowBendingMode.HORIZONTAL_IN;
+
+	public double calculateDirectConsumption(double allDomestic, double input, double output, double consumption, double degree) {
+		double valueCreation = consumption + output - input;
 		switch (this) {
-		case INPUTS:
-			return Math.min(consumption, input * degree);
-		case CONSUMPTION:
-			return Math.min(consumption * degree, input);
-		default:
-		case BOTH:
-			return Math.min(consumption, input) * degree;
+		case IMPORTS_AWARE_IN:
+			return Math.min(consumption, allDomestic * degree);
+		case IMPORTS_AWARE_CON:
+			return Math.min(consumption * degree, allDomestic);
+		case IMPORTS_AWARE_MID: {
+			double mid = (consumption + allDomestic) / 2 * degree;
+			return Math.min(mid, Math.min(consumption, allDomestic));
 		}
+		case HORIZONTAL_IN: {
+			double amount = Math.min(input * degree, output);
+			return translateToVertical(valueCreation, consumption, input, output, amount);
+		}
+		case HORIZONTAL_MID: {
+			double mid = (input + output) / 2 * degree;
+			double amount = Math.min(mid, Math.min(output, input));
+			return translateToVertical(valueCreation, consumption, input, output, amount);
+		}
+		case HORIZONTAL_OUT: {
+			double amount = Math.min(input, output * degree);
+			return translateToVertical(valueCreation, consumption, input, output, amount);
+		}
+		case VERTICAL_IN:
+			return Math.min(valueCreation * degree, consumption);
+		default:
+		case VERTICAL_MID:
+			double mid = (valueCreation + consumption) / 2 * degree;
+			return Math.min(mid, Math.min(consumption, valueCreation));
+		case VERTICAL_OUT:
+			return Math.min(valueCreation, consumption * degree);
+		}
+
 	}
 
+	private double translateToVertical(double v, double c, double i, double o, double t) {
+		double temp = v * c * t;
+		if (temp == 0.0) {
+			return 0.0;
+		} else {
+			return temp / (i * (o - t) + t * c);
+		}
+	}
 }

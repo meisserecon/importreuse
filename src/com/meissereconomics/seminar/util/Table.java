@@ -25,6 +25,7 @@ public class Table {
 	}
 	
 	public void include(String type, double value){
+		assert !Double.isNaN(value);
 		this.types.add(type);
 		this.entries.obtain(current).include(type, value);
 	}

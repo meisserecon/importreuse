@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.function.BiConsumer;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -18,13 +17,15 @@ import com.meissereconomics.seminar.util.InstantiatingHashmap;
 
 public class InputOutputGraph {
 
-	public static final int COUNTRIES = 41;
+	public static final String[] COUNTRY_LIST = new String[]{"AUS", "AUT", "BEL", "BGR", "BRA", "CAN", "CHN", "CYP", "CZE", "DEU", "DNK", "ESP", "EST", "FIN", "FRA", "GBR", "GRC", "HUN", "IDN", "IND", "IRL", "ITA", "JPN", "KOR", "LTU", "LUX", "LVA", "MEX", "MLT", "NLD", "POL", "PRT", "ROU", "RoW", "RUS", "SVK", "SVN", "SWE", "TUR", "TWN", "USA"};
+	
+	public static final int COUNTRIES = COUNTRY_LIST.length;
 	public static final int SECTORS = 35;
 
 	private InstantiatingHashmap<String, Country> countries = new InstantiatingHashmap<String, Country>() {
 
 		private int count = 0;
-		
+
 		@Override
 		protected Country createValue(String name) {
 			return new Country(name, count++, COUNTRIES);
@@ -102,15 +103,17 @@ public class InputOutputGraph {
 			c.collapseSmallestSectors(i);
 		}
 	}
-	
+
 	public void collapseRandomSectors(int seed, int i) {
 		collapseRandomSectors(seed, i, null);
 	}
-	
-	public void collapseRandomSectors(int seed, int i, BiConsumer<Node, Node> mergeListener) {
+
+	public void collapseRandomSectors(int seed, int i, String except) {
 		for (Country c : countries.values()) {
-			seed += 131313;
-			c.collapseRandomSectors(seed, i);
+			if (!c.getName().equals(except)) {
+				seed += 131313;
+				c.collapseRandomSectors(seed, i);
+			}
 		}
 	}
 

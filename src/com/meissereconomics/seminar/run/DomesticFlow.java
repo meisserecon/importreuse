@@ -19,17 +19,17 @@ public class DomesticFlow {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
 		long t0 = System.nanoTime();
-		InputOutputGraph iograph = new InputOutputGraph("data/wiot05_row_apr12.CSV");
-		System.out.print("Level");
+		InputOutputGraph iograph = new InputOutputGraph("data/wiot11_row_sep12.CSV");
+		System.out.print("Sectors");
 		for (Country c : iograph.getCountries()) {
-			System.out.print("\t" + c.toString());
+			System.out.print("\t" + c.toString() + " Max\t" + c.toString() + " Min\t" + c.toString() + " Exports");
 		}
 		System.out.println();
 		for (int level = InputOutputGraph.SECTORS; level > 0; level--) {
 			iograph.collapseRandomSectors(13, level);
 			System.out.print(level);
 			for (Country c : iograph.getCountries()) {
-				System.out.print("\t" + c.getMaxDomesticFlow(true));
+				System.out.print("\t" + c.getMaxReusedImports() + "\t" + c.getMinReusedImports() + "\t" + c.getExports());
 			}
 			System.out.println();
 		}

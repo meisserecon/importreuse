@@ -33,10 +33,10 @@ public class Figure1Resolution {
 		long t0 = System.nanoTime();
 		InstantiatingHashmap<Integer, DoubleArray> inputReuse = createMap();
 		for (int run = 0; run < 100; run++) {
-			InputOutputGraph iograph = new InputOutputGraph("data/wiot05_row_apr12.CSV");
+			InputOutputGraph iograph = new InputOutputGraph("data/wiot11_row_sep12.CSV");
 			for (int level = InputOutputGraph.SECTORS; level > 0; level--) {
 				iograph.collapseRandomSectors(run * 31, level);
-				iograph.deriveOrigins(EFlowBendingMode.BOTH, 0.0);
+				iograph.deriveOrigins(EFlowBendingMode.DEFAULT, 0.0);
 				double reuse = iograph.getGlobalImportReuse();
 				inputReuse.obtain(level).addElement(reuse);
 			}
