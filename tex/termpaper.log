@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.6.25)  20 MAY 2016 15:23
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.6.25)  17 JUN 2016 21:33
 entering extended mode
 **C:/eclipsej2ee/workspace/ImportReuse/tex/termpaper.tex
 (C:/eclipsej2ee/workspace/ImportReuse/tex/termpaper.tex
@@ -538,37 +538,8 @@ LaTeX Font Info:    Font shape `T1/ua1/bx/n' in size <15> not available
 (Font)              Font shape `T1/ua1/b/n' tried instead on input line 38.
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <15> not available
 (Font)              Font shape `T1/ppl/b/n' tried instead on input line 38.
-LaTeX Font Info:    Try loading font information for OML+zplm on input line 40.
 
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omlzplm.fd"
-File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
-)
-LaTeX Font Info:    Try loading font information for OMS+zplm on input line 40.
-
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omszplm.fd"
-File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
-)
-LaTeX Font Info:    Try loading font information for OMX+zplm on input line 40.
-
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omxzplm.fd"
-File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
-)
-LaTeX Font Info:    Try loading font information for OT1+zplm on input line 40.
-
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1zplm.fd"
-File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
-)
-LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <10> not available
-(Font)              Font shape `T1/ppl/b/n' tried instead on input line 42.
-
-
-LaTeX Warning: Reference `Amiti' on page 1 undefined on input line 42.
-
-<uzh_logo_e_pos.pdf, id=66, 154.5775pt x 49.18375pt>
+<uzh_logo_e_pos.pdf, id=67, 154.5775pt x 49.18375pt>
 File: uzh_logo_e_pos.pdf Graphic file (type pdf)
  <use uzh_logo_e_pos.pdf>
 Package pdftex.def Info: uzh_logo_e_pos.pdf used on input line 43.
@@ -586,8 +557,33 @@ Overfull \vbox (189.82466pt too high) has occurred while \output is active []
 
 
  <C:/eclipsej2ee/workspace/ImportReuse/tex/uzh_logo_e_pos.pdf>]
-LaTeX Font Info:    Calculating math sizes for size <7.5> on input line 52.
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <10> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 49.
+LaTeX Font Info:    Calculating math sizes for size <7.5> on input line 53.
+LaTeX Font Info:    Try loading font information for OML+zplm on input line 53.
 
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omlzplm.fd"
+File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
+)
+LaTeX Font Info:    Try loading font information for OMS+zplm on input line 53.
+
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omszplm.fd"
+File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
+)
+LaTeX Font Info:    Try loading font information for OMX+zplm on input line 53.
+
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omxzplm.fd"
+File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
+)
+LaTeX Font Info:    Try loading font information for OT1+zplm on input line 53.
+
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1zplm.fd"
+File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
+)
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
@@ -599,11 +595,11 @@ Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
-[4] <../results/sketch.pdf, id=123, 558.96353pt x 115.70387pt>
+[4] <../results/sketch.pdf, id=130, 558.96353pt x 115.70387pt>
 File: ../results/sketch.pdf Graphic file (type pdf)
 
 <use ../results/sketch.pdf>
-Package pdftex.def Info: ../results/sketch.pdf used on input line 75.
+Package pdftex.def Info: ../results/sketch.pdf used on input line 79.
 (pdftex.def)             Requested size: 447.17142pt x 92.56322pt.
 
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
@@ -613,43 +609,42 @@ Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
-[6] <../results/resolution.pdf, id=156, 480.61769pt x 173.88121pt>
+[6] <../results/resolution.pdf, id=167, 480.61769pt x 173.88121pt>
 File: ../results/resolution.pdf Graphic file (type pdf)
 
 <use ../results/resolution.pdf>
-Package pdftex.def Info: ../results/resolution.pdf used on input line 97.
+Package pdftex.def Info: ../results/resolution.pdf used on input line 101.
 (pdftex.def)             Requested size: 384.49467pt x 139.10515pt.
 
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
 [7 <C:/eclipsej2ee/workspace/ImportReuse/results/resolution.pdf>]
-<../results/globalpreferencevariation.pdf, id=223, 480.61769pt x 272.99152pt>
-File: ../results/globalpreferencevariation.pdf Graphic file (type pdf)
+<../results/germanrelief2011.pdf, id=234, 465.00336pt x 180.81271pt>
+File: ../results/germanrelief2011.pdf Graphic file (type pdf)
 
-<use ../results/globalpreferencevariation.pdf>
-Package pdftex.def Info: ../results/globalpreferencevariation.pdf used on input
- line 108.
-(pdftex.def)             Requested size: 384.49467pt x 218.3935pt.
+<use ../results/germanrelief2011.pdf>
+Package pdftex.def Info: ../results/germanrelief2011.pdf used on input line 112
+.
+(pdftex.def)             Requested size: 372.00319pt x 144.65034pt.
 
-<../results/domprefhistotyusa.pdf, id=224, 665.3951pt x 243.96504pt>
+<../results/domprefhistotyusa.pdf, id=235, 665.3951pt x 243.96504pt>
 File: ../results/domprefhistotyusa.pdf Graphic file (type pdf)
 
 <use ../results/domprefhistotyusa.pdf>
 Package pdftex.def Info: ../results/domprefhistotyusa.pdf used on input line 11
-4.
+8.
 (pdftex.def)             Requested size: 399.24014pt x 146.38014pt.
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 121.
+               Default added (so using `tbp') on input line 125.
 
 
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
-[8 <C:/eclipsej2ee/workspace/ImportReuse/results/globalpreferencevariation.pdf>
-]
+[8 <C:/eclipsej2ee/workspace/ImportReuse/results/germanrelief2011.pdf>]
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
@@ -679,7 +674,7 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 192.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 192.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 192.
 Package rerunfilecheck Info: File `termpaper.out' has not changed.
-(rerunfilecheck)             Checksum: 136C5042EE79A97D81209A5ACB69DEA7;853.
+(rerunfilecheck)             Checksum: 850191657A5300670F5E126734787734;873.
 
 
 LaTeX Warning: There were undefined references.
@@ -687,22 +682,22 @@ LaTeX Warning: There were undefined references.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 192.
  ) 
 Here is how much of TeX's memory you used:
- 9038 strings out of 493921
- 137703 string characters out of 3144873
- 278893 words of memory out of 3000000
- 12132 multiletter control sequences out of 15000+200000
- 53972 words of font info for 92 fonts, out of 3000000 for 9000
+ 9055 strings out of 493921
+ 138130 string characters out of 3144873
+ 280118 words of memory out of 3000000
+ 12143 multiletter control sequences out of 15000+200000
+ 54470 words of font info for 94 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 41i,12n,43p,1494b,458s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,12n,43p,1426b,454s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program F
 iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Fil
 es (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplb8a.pfb><C:/Program Files (x86)
 /MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program Files (x86)/MiKTeX 
 2.9/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on termpaper.pdf (12 pages, 212847 bytes).
+Output written on termpaper.pdf (12 pages, 215439 bytes).
 PDF statistics:
- 421 PDF objects out of 1000 (max. 8388607)
- 48 named destinations out of 1000 (max. 500000)
+ 435 PDF objects out of 1000 (max. 8388607)
+ 52 named destinations out of 1000 (max. 500000)
  138 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -10,7 +10,8 @@ import org.apache.commons.math3.stat.descriptive.moment.Variance;
 
 import com.meissereconomics.seminar.Country;
 import com.meissereconomics.seminar.EFlowBendingMode;
-import com.meissereconomics.seminar.InputOutputGraph;
+import com.meissereconomics.seminar.data.InputOutputGraph;
+import com.meissereconomics.seminar.data.WiodInputOutputGraph;
 import com.meissereconomics.seminar.util.Formatter;
 
 import net.openhft.koloboke.collect.map.ObjDoubleMap;
@@ -23,10 +24,10 @@ import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;
  * Running this this took about 12 hours, giving the process 8 GB of RAM. For faster runs that
  * consume less memory, feel free to reduce the RUNS parameter from 5 to 1, reducing accuracy.
  */
-public class ConsumptionPreferenceOverTime {
+public class ReuseDriversOverTime {
 
 	private static final double DEFAULT_BENDING = 0.6;
-	private static final int RUNS = 6;
+	private static final int RUNS = 5;
 	private static final double EPSILON = 0.001;
 	private static final EFlowBendingMode MODE = EFlowBendingMode.DEFAULT;
 
@@ -35,23 +36,22 @@ public class ConsumptionPreferenceOverTime {
 	private InputOutputGraph[][] graphs;
 	private ObjDoubleMap<String> bendings, leontief;
 
-	public ConsumptionPreferenceOverTime(int seed, int year, int runs) throws FileNotFoundException, IOException {
+	public ReuseDriversOverTime(int seed, int year, int runs) throws FileNotFoundException, IOException {
 		this.year = year;
 		String file = Formatter.getFilename(year);
 		// System.out.println("Processing file " + file);
-		this.levels = new double[InputOutputGraph.SECTORS];
+		this.levels = new double[WiodInputOutputGraph.SECTORS];
 		this.bendings = HashObjDoubleMaps.newMutableMap();
 		this.leontief = HashObjDoubleMaps.newMutableMap();
 		this.bendings = HashObjDoubleMaps.newMutableMap();
-		this.graphs = new InputOutputGraph[InputOutputGraph.SECTORS][runs];
+		this.graphs = new InputOutputGraph[WiodInputOutputGraph.SECTORS][runs];
 		for (int i = 0; i < graphs.length; i++) {
 			int sector = i + 1;
 			this.levels[i] = sector;
-			System.out.println("Loading " + sector);
 			for (int run = 0; run < runs; run++) {
-				InputOutputGraph graph = new InputOutputGraph(file);
+				InputOutputGraph graph = new WiodInputOutputGraph(file);
 				graph.collapseRandomSectors(run * 31 + seed * 12313, sector);
-				if (sector == InputOutputGraph.SECTORS && run == 0) {
+				if (sector == WiodInputOutputGraph.SECTORS && run == 0) {
 					graph.deriveOrigins(MODE, 0.0);
 					for (Country c : graph.getCountries()) {
 						this.leontief.put(c.getName(), c.getImportReuse());
@@ -59,7 +59,7 @@ public class ConsumptionPreferenceOverTime {
 					}
 				}
 				graph.deriveOrigins(MODE, DEFAULT_BENDING);
-				if (sector == InputOutputGraph.SECTORS || sector == 1){
+				if (sector == WiodInputOutputGraph.SECTORS || sector == 1){
 					// graph 1 and 35 are always the same
 					this.graphs[i] = new InputOutputGraph[]{graph};
 					break;
@@ -86,7 +86,7 @@ public class ConsumptionPreferenceOverTime {
 			double variance = new Variance().evaluate(reuses);
 			double covariance = new Covariance().covariance(levels, reuses);
 			double leontiefReuse = leontief.getDouble(country);
-			Country c = graphs[InputOutputGraph.SECTORS - 1][0].getCountry(country);
+			Country c = graphs[WiodInputOutputGraph.SECTORS - 1][0].getCountry(country);
 			double exports = c.getExports();
 			double maxreuse = c.getMaxReusedImports() / exports;
 			double minreuse = c.getMinReusedImports() / exports;
@@ -178,7 +178,7 @@ public class ConsumptionPreferenceOverTime {
 		long t0 = System.nanoTime();
 		System.out.println("Year\tCountry\tBending\tReuse\tVariance\tCovariance\tExports\tImports\tConsumption\tMax Flow Reuse\tMin Flow Reuse\tLeontief Reuse");
 		for (int year = 2011; year >= 1995; year--) {
-			ConsumptionPreferenceOverTime bendings = new ConsumptionPreferenceOverTime(11233, year, RUNS);
+			ReuseDriversOverTime bendings = new ReuseDriversOverTime(11233, year, RUNS);
 			bendings.optimizeAll();
 			bendings.printAll();
 			System.out.println("Processed " + year + " after " + (System.nanoTime() - t0)/1000000 + "ms");

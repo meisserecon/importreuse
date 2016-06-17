@@ -8,28 +8,29 @@ import org.apache.commons.math3.stat.descriptive.moment.Variance;
 
 import com.meissereconomics.seminar.Country;
 import com.meissereconomics.seminar.EFlowBendingMode;
-import com.meissereconomics.seminar.InputOutputGraph;
+import com.meissereconomics.seminar.data.InputOutputGraph;
+import com.meissereconomics.seminar.data.WiodInputOutputGraph;
 import com.meissereconomics.seminar.util.Formatter;
 
 public class CountryPreferenceTestLarge {
 
-	private static final int RUNS = 20;
+	private static final int RUNS = 5;
 
-	private static final double EPSILON = 0.00001;
+	private static final double EPSILON = 0.0001;
 
 	private String country;
 	private double[] levels;
 	private InputOutputGraph[][] graphs;
 
-	public CountryPreferenceTestLarge(String country, int year, int seed) throws FileNotFoundException, IOException {
+	public CountryPreferenceTestLarge(InputOutputGraph graph, String country, int seed) throws FileNotFoundException, IOException {
 		this.country = country;
-		this.levels = new double[InputOutputGraph.SECTORS];
-		this.graphs = new InputOutputGraph[InputOutputGraph.SECTORS][RUNS];
+		this.levels = new double[graph.getSectors()];
+		this.graphs = new InputOutputGraph[levels.length][RUNS];
 		for (int i = 0; i < graphs.length; i++) {
 			int sector = i + 1;
 			this.levels[i] = sector;
 			for (int run = 0; run < RUNS; run++) {
-				InputOutputGraph g = new InputOutputGraph(Formatter.getFilename(year));
+				InputOutputGraph g = graph.copy();
 				g.collapseRandomSectors(run * 31 + seed, 1, country);
 				g.getCountry(country).collapseRandomSectors(run * 31 + seed, sector);
 				g.deriveOrigins(EFlowBendingMode.DEFAULT, 0.0);
@@ -102,12 +103,13 @@ public class CountryPreferenceTestLarge {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		CountryPreferenceTestLarge test = new CountryPreferenceTestLarge("USA", 2011, 94357);
+		InputOutputGraph graph = new WiodInputOutputGraph(2011); // new USGraph(true); // 
+		CountryPreferenceTestLarge test = new CountryPreferenceTestLarge(graph, "USA", 94357);
 		for (EFlowBendingMode mode : EFlowBendingMode.values()) {
 			double optimalBending = test.minimize(mode);
 			print(test, mode, optimalBending);
-			for (int i = 0; i <= 20; i++) {
-				double bending = i * 0.05;
+			for (int i = 0; i <= 10; i++) {
+				double bending = i * 0.1;
 				print(test, mode, bending);
 			}
 		}
@@ -120,7 +122,7 @@ public class CountryPreferenceTestLarge {
 		for (int i = 0; i < reuse.length; i++) {
 			double sum = 0.0;
 			for (int run = 0; run < graphs[i].length; run++) {
-				Country c = graphs[i][0].getCountry(country);
+				Country c = graphs[i][run].getCountry(country);
 				sum += (max ? c.getMaxReusedImports() : c.getMinReusedImports()) / c.getExports();
 			}
 			reuse[i] = sum / graphs[i].length;

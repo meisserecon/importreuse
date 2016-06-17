@@ -2,13 +2,17 @@ package com.meissereconomics.seminar;
 
 public enum EFlowBendingMode {
 
-	HORIZONTAL_IN, HORIZONTAL_OUT, HORIZONTAL_MID, VERTICAL_IN, VERTICAL_OUT, VERTICAL_MID, IMPORTS_AWARE_CON, IMPORTS_AWARE_IN, IMPORTS_AWARE_MID;
+	HORIZONTAL_MIN, HORIZONTAL_MAX, HORIZONTAL_IN, HORIZONTAL_OUT, HORIZONTAL_MID, VERTICAL_IN, VERTICAL_OUT, VERTICAL_MID, IMPORTS_AWARE_MIN, IMPORTS_AWARE_MAX, IMPORTS_AWARE_CON, IMPORTS_AWARE_IN, IMPORTS_AWARE_MID;
 
 	public static final EFlowBendingMode DEFAULT = EFlowBendingMode.HORIZONTAL_IN;
 
 	public double calculateDirectConsumption(double allDomestic, double input, double output, double consumption, double degree) {
 		double valueCreation = consumption + output - input;
 		switch (this) {
+		case IMPORTS_AWARE_MIN:
+			return Math.min(consumption, allDomestic) * degree;
+		case IMPORTS_AWARE_MAX:
+			return Math.min(consumption, Math.min(allDomestic, Math.max(consumption, allDomestic) * degree));
 		case IMPORTS_AWARE_IN:
 			return Math.min(consumption, allDomestic * degree);
 		case IMPORTS_AWARE_CON:
@@ -16,6 +20,15 @@ public enum EFlowBendingMode {
 		case IMPORTS_AWARE_MID: {
 			double mid = (consumption + allDomestic) / 2 * degree;
 			return Math.min(mid, Math.min(consumption, allDomestic));
+		}
+		case HORIZONTAL_MIN: {
+			double amount = Math.min(output, input) * degree;
+			return translateToVertical(valueCreation, consumption, input, output, amount);
+		}
+		case HORIZONTAL_MAX: {
+			double max = Math.max(output, input) * degree;
+			double amount = Math.min(max, Math.min(output, input));
+			return translateToVertical(valueCreation, consumption, input, output, amount);
 		}
 		case HORIZONTAL_IN: {
 			double amount = Math.min(input * degree, output);

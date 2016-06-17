@@ -1,4 +1,4 @@
-package com.meissereconomics.seminar;
+package com.meissereconomics.seminar.data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +10,9 @@ import java.util.Iterator;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+
+import com.meissereconomics.seminar.Country;
+import com.meissereconomics.seminar.EFlowBendingMode;
 
 public class OECDCountryGraph {
 	

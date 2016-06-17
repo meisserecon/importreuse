@@ -4,7 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.meissereconomics.seminar.Country;
-import com.meissereconomics.seminar.InputOutputGraph;
+import com.meissereconomics.seminar.data.InputOutputGraph;
+import com.meissereconomics.seminar.data.WiodInputOutputGraph;
 
 /**
  * Running this script should produce output "DomesticFlow.out", a table showing the maximum possible
@@ -19,13 +20,13 @@ public class DomesticFlow {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
 		long t0 = System.nanoTime();
-		InputOutputGraph iograph = new InputOutputGraph("data/wiot11_row_sep12.CSV");
+		InputOutputGraph iograph = new WiodInputOutputGraph("data/wiot11_row_sep12.CSV");
 		System.out.print("Sectors");
 		for (Country c : iograph.getCountries()) {
 			System.out.print("\t" + c.toString() + " Max\t" + c.toString() + " Min\t" + c.toString() + " Exports");
 		}
 		System.out.println();
-		for (int level = InputOutputGraph.SECTORS; level > 0; level--) {
+		for (int level = WiodInputOutputGraph.SECTORS; level > 0; level--) {
 			iograph.collapseRandomSectors(13, level);
 			System.out.print(level);
 			for (Country c : iograph.getCountries()) {

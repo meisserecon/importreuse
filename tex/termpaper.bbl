@@ -1,15 +1,38 @@
-\begin{thebibliography}{9}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
+\bibitem[Amiti et~al.(2012)Amiti, Itskhoki, and Konings]{amiti2012importers}
+M.~Amiti, O.~Itskhoki, and J.~Konings.
+\newblock Importers, exporters, and exchange rate disconnect.
+\newblock Technical report, National Bureau of Economic Research, 2012.
+
 \bibitem[Auer et~al.(2016)Auer, Levchenko, and
   Saur{\'e}]{auer2016international}
 R.~A. Auer, A.~A. Levchenko, and P.~Saur{\'e}.
 \newblock International inflation spillovers through input linkages.
 \newblock 2016.
+
+\bibitem[Barab{\'a}si and Albert(1999)]{barabasi1999emergence}
+A.-L. Barab{\'a}si and R.~Albert.
+\newblock Emergence of scaling in random networks.
+\newblock \emph{Science}, 286\penalty0 (5439):\penalty0 509--512, 1999.
+
+\bibitem[Chaney(2014)]{chaney2014network}
+T.~Chaney.
+\newblock The network structure of international trade.
+\newblock \emph{The American Economic Review}, 104\penalty0 (11):\penalty0
+  3600--3634, 2014.
+
+\bibitem[Dietzenbacher et~al.(2013)Dietzenbacher, Los, Stehrer, Timmer, and
+  De~Vries]{dietzenbacher2013construction}
+E.~Dietzenbacher, B.~Los, R.~Stehrer, M.~Timmer, and G.~De~Vries.
+\newblock The construction of world input--output tables in the wiod project.
+\newblock \emph{Economic Systems Research}, 25\penalty0 (1):\penalty0 71--98,
+  2013.
 
 \bibitem[Edmonds and Karp(1972)]{edmonds1972theoretical}
 J.~Edmonds and R.~M. Karp.
@@ -37,10 +60,12 @@ H.~L. Kee and H.~Tang.
 \newblock Domestic value added in chinese exports: firm-level evidence.
 \newblock \emph{Johns Hopkins University mimeo}, 2013.
 
-\bibitem[Koopman et~al.(2012)Koopman, Wang, and Wei]{koopman2012tracing}
+\bibitem[Koopman et~al.(2012)Koopman, Wang, and Wei]{koopman2012estimating}
 R.~Koopman, Z.~Wang, and S.-J. Wei.
-\newblock Tracing value-added and double counting in gross exports.
-\newblock Technical report, National Bureau of Economic Research, 2012.
+\newblock Estimating domestic content in exports when processing trade is
+  pervasive.
+\newblock \emph{Journal of development economics}, 99\penalty0 (1):\penalty0
+  178--189, 2012.
 
 \bibitem[OECD(2000)]{oecd2000}
 OECD.

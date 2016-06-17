@@ -10,7 +10,8 @@ import org.apache.commons.math3.util.DoubleArray;
 import org.apache.commons.math3.util.ResizableDoubleArray;
 
 import com.meissereconomics.seminar.EFlowBendingMode;
-import com.meissereconomics.seminar.InputOutputGraph;
+import com.meissereconomics.seminar.data.InputOutputGraph;
+import com.meissereconomics.seminar.data.WiodInputOutputGraph;
 import com.meissereconomics.seminar.util.InstantiatingHashmap;
 
 /**
@@ -30,14 +31,20 @@ public class Figure1Resolution {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
+		printResolutionGraph(new WiodInputOutputGraph("data/wiot11_row_sep12.CSV"));
+//		printResolutionGraph(new USGraph(true));
+	}
+
+	protected static void printResolutionGraph(InputOutputGraph original) throws FileNotFoundException, IOException {
 		long t0 = System.nanoTime();
 		InstantiatingHashmap<Integer, DoubleArray> inputReuse = createMap();
-		for (int run = 0; run < 100; run++) {
-			InputOutputGraph iograph = new InputOutputGraph("data/wiot11_row_sep12.CSV");
-			for (int level = InputOutputGraph.SECTORS; level > 0; level--) {
-				iograph.collapseRandomSectors(run * 31, level);
-				iograph.deriveOrigins(EFlowBendingMode.DEFAULT, 0.0);
-				double reuse = iograph.getGlobalImportReuse();
+		for (int run = 0; run < 10; run++) {
+			InputOutputGraph graph = original.copy();
+			int sectors = graph.getSectors();
+			for (int level = sectors; level > 0; level--) {
+				graph.collapseRandomSectors(run * 31, level);
+				graph.deriveOrigins(EFlowBendingMode.DEFAULT, 0.0);
+				double reuse = graph.getGlobalImportReuse();
 				inputReuse.obtain(level).addElement(reuse);
 			}
 			long deltaT = System.nanoTime() - t0;
@@ -52,7 +59,6 @@ public class Figure1Resolution {
 				System.out.println(t + "\t" + new Mean().evaluate(samples) + "\t" + new Variance().evaluate(samples));
 			}
 		});
-		
 	}
 
 }

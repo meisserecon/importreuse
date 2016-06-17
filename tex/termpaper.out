@@ -1,14 +1,14 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Data}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{WIOD}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.1}{World Input-Output Database}{section.2}% 3
 \BOOKMARK [2][-]{subsection.2.2}{Graph View}{section.2}% 4
 \BOOKMARK [1][-]{section.3}{Method}{}% 5
 \BOOKMARK [2][-]{subsection.3.1}{Varying the Sector Resolution}{section.3}% 6
 \BOOKMARK [2][-]{subsection.3.2}{Maximum Flow}{section.3}% 7
-\BOOKMARK [2][-]{subsection.3.3}{Processing Trade}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.3}{Processing Trade Propensity}{section.3}% 8
 \BOOKMARK [2][-]{subsection.3.4}{Scale-Invariance}{section.3}% 9
 \BOOKMARK [1][-]{section.4}{Result}{}% 10
 \BOOKMARK [2][-]{subsection.4.1}{Varying the Resolution}{section.4}% 11
-\BOOKMARK [2][-]{subsection.4.2}{Scale-Invariant Domestic Consumption Preferences}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.2}{Tuning Processing Trade Propensity}{section.4}% 12
 \BOOKMARK [2][-]{subsection.4.3}{Drivers of Import Reuse}{section.4}% 13
 \BOOKMARK [1][-]{section.5}{Conclusion}{}% 14

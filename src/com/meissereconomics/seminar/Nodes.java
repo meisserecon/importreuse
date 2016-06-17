@@ -73,4 +73,14 @@ public class Nodes {
 		touch();
 	}
 
+	public int getNonConsumptionSectors() {
+		int count = 0;
+		for (Node n: nodes.values()){
+			if (!n.isConsumption()){
+				count++;
+			}
+		}
+		return count;
+	}
+
 }

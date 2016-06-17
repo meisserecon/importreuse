@@ -35,7 +35,7 @@ public class Table {
 	}
 
 	public void printAll() {
-		String row = Formatter.toTabs(labels);
+		String row = Formatter.toTabs((Object[])labels);
 		for (String type: types){
 			row += "\t" + type + "\tVariance of " + type; 
 		}

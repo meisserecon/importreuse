@@ -10,6 +10,8 @@ import java.util.Random;
 import com.meissereconomics.seminar.flow.MaxFlow;
 
 public class Country implements Comparable<Country> {
+	
+	public static final String ROW = "RoW";
 
 	private final int countries;
 	private final int number;
@@ -31,6 +33,10 @@ public class Country implements Comparable<Country> {
 
 	public ArrayList<Node> getNodeList() {
 		return nodes.getList();
+	}
+	
+	public boolean hasNode(String industry){
+		return nodes.contains(industry);
 	}
 
 	public Node getNode(String industry) {
@@ -151,6 +157,11 @@ public class Country implements Comparable<Country> {
 			this.nodes.remove(n2.getIndustry());
 		}
 	}
+	
+	public void merge(String n1, String n2){
+		getNode(n1).absorb(getNode(n2), 0);
+		nodes.remove(n2);
+	}
 
 	public void collapseSmallestSectors(int sectors) {
 		PriorityQueue<Node> nodes = new PriorityQueue<>(new Comparator<Node>() {
@@ -213,6 +224,14 @@ public class Country implements Comparable<Country> {
 
 	public int getCountries() {
 		return countries;
+	}
+
+	public boolean isRestOfTheWorld() {
+		return name.equals(ROW);
+	}
+
+	public int getSectors() {
+		return nodes.getNonConsumptionSectors();
 	}
 
 }

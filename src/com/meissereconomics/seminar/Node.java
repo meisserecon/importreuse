@@ -42,6 +42,10 @@ public class Node {
 		this.inputs = HashObjDoubleMaps.newMutableMap();
 		this.outputs = HashObjDoubleMaps.newMutableMap();
 	}
+	
+	public void forEachOutput(ObjDoubleConsumer<Node> consumer){
+		this.outputs.forEach(consumer);
+	}
 
 	public void forEachLocalInputs(ObjDoubleConsumer<Node> consumer) {
 		this.inputs.forEach(new ObjDoubleConsumer<Node>() {
@@ -174,17 +178,26 @@ public class Node {
 	public Country getCountry() {
 		return country;
 	}
+	
+	public void linkOrAdd(Node dest, double value) {
+		if (outputs.containsKey(dest)){
+			updateLink(dest, outputs.getDouble(dest) + value);
+		} else {
+			linkTo(dest, value);
+		}
+	}
 
 	public void linkTo(Node node, double millions) {
-		assert !Double.isNaN(millions);
-		assert !this.outputs.containsKey(node);
-		this.outputs.put(node, millions);
-		assert !node.inputs.containsKey(this);
-		node.inputs.put(this, millions);
+		if (millions != 0.0) {
+			assert !Double.isNaN(millions);
+			assert !this.outputs.containsKey(node);
+			this.outputs.put(node, millions);
+			assert !node.inputs.containsKey(this);
+			node.inputs.put(this, millions);
+		}
 	}
 
 	public void updateLink(Node node, double millions) {
-		assert millions > 0;
 		assert this.outputs.containsKey(node);
 		assert node.inputs.containsKey(this);
 		this.outputs.put(node, millions);
@@ -197,9 +210,10 @@ public class Node {
 		while (iter.hasNext()) {
 			Map.Entry<Node, Double> next = iter.next();
 			if (next.getValue() < 0.0) {
-				assert next.getKey() != this; // not sure if it would work
+				Node dest = next.getKey();
+				assert dest != this; // not sure if it would work
 				if (!isConsumption()) { // ignore negative consumption
-					linkTo(next.getKey(), -next.getValue());
+					linkOrAdd(dest, -next.getValue());
 				}
 				next.getKey().outputs.removeAsDouble(this);
 				iter.remove();
@@ -269,13 +283,13 @@ public class Node {
 
 	@Override
 	public String toString() {
-		String s1 = Formatter.toTabs(country, industry, getImports(), getExports(), getCreatedValue());
-		s1 += "\tINPUTS:";
-		for (Map.Entry<Node, Double> e : inputs.entrySet()) {
-			if (e.getKey().country == country) {
-				s1 += "\t" + e.getKey().industry + "\t" + e.getValue();
-			}
-		}
+		String s1 = Formatter.toTabs(country, industry, getInputs(), getOutputs(), getDomesticConsumption());
+//		s1 += "\tINPUTS:";
+//		for (Map.Entry<Node, Double> e : inputs.entrySet()) {
+//			if (e.getKey().country == country) {
+//				s1 += "\t" + e.getKey().industry + "\t" + e.getValue();
+//			}
+//		}
 		// s1 += "\tOUTPUTS:";
 		// for (Map.Entry<Node, Double> e : outputs.entrySet()) {
 		// s1 += "\t" + e.getKey() + "\t" + e.getValue();
