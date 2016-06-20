@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.6.25)  17 JUN 2016 21:33
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.6.25)  20 JUN 2016 17:29
 entering extended mode
 **C:/eclipsej2ee/workspace/ImportReuse/tex/termpaper.tex
 (C:/eclipsej2ee/workspace/ImportReuse/tex/termpaper.tex
@@ -595,7 +595,7 @@ Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
-[4] <../results/sketch.pdf, id=130, 558.96353pt x 115.70387pt>
+[4] <../results/sketch.pdf, id=128, 558.96353pt x 115.70387pt>
 File: ../results/sketch.pdf Graphic file (type pdf)
 
 <use ../results/sketch.pdf>
@@ -609,7 +609,7 @@ Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
-[6] <../results/resolution.pdf, id=167, 480.61769pt x 173.88121pt>
+[6] <../results/resolution.pdf, id=162, 480.61769pt x 173.88121pt>
 File: ../results/resolution.pdf Graphic file (type pdf)
 
 <use ../results/resolution.pdf>
@@ -620,7 +620,7 @@ Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
 [7 <C:/eclipsej2ee/workspace/ImportReuse/results/resolution.pdf>]
-<../results/germanrelief2011.pdf, id=234, 465.00336pt x 180.81271pt>
+<../results/germanrelief2011.pdf, id=229, 465.00336pt x 180.81271pt>
 File: ../results/germanrelief2011.pdf Graphic file (type pdf)
 
 <use ../results/germanrelief2011.pdf>
@@ -628,17 +628,21 @@ Package pdftex.def Info: ../results/germanrelief2011.pdf used on input line 112
 .
 (pdftex.def)             Requested size: 372.00319pt x 144.65034pt.
 
-<../results/domprefhistotyusa.pdf, id=235, 665.3951pt x 243.96504pt>
-File: ../results/domprefhistotyusa.pdf Graphic file (type pdf)
-
-<use ../results/domprefhistotyusa.pdf>
-Package pdftex.def Info: ../results/domprefhistotyusa.pdf used on input line 11
-8.
-(pdftex.def)             Requested size: 399.24014pt x 146.38014pt.
+<../results/reusedrivers-processing-trade-greece.pdf, id=230, 712.56026pt x 319
+.77934pt>
+File: ../results/reusedrivers-processing-trade-greece.pdf Graphic file (type pd
+f)
+ <use ../results/reusedrivers-processing-trade-greece.pdf>
+Package pdftex.def Info: ../results/reusedrivers-processing-trade-greece.pdf us
+ed on input line 118.
+(pdftex.def)             Requested size: 427.53946pt x 191.86908pt.
 
 
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `tbp') on input line 125.
+
+
+LaTeX Warning: Float too large for page by 4.75931pt on input line 171.
 
 
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
@@ -649,55 +653,50 @@ Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
 [9]
-
-LaTeX Warning: Reference `fig:resolution' on page 10 undefined on input line 18
-6.
-
-
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
-[10 <C:/eclipsej2ee/workspace/ImportReuse/results/domprefhistotyusa.pdf>]
-(C:\eclipsej2ee\workspace\ImportReuse\tex\termpaper.bbl
+[10 <C:/eclipsej2ee/workspace/ImportReuse/results/reusedrivers-processing-trade
+-greece.pdf>]
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
-[11])
+[11] (C:\eclipsej2ee\workspace\ImportReuse\tex\termpaper.bbl
+Overfull \vbox (2.54115pt too high) has occurred while \output is active []
+
+
+[12])
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 192.
 
 Overfull \vbox (2.54115pt too high) has occurred while \output is active []
 
 
-[12]
+[13]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 192.
  (C:\eclipsej2ee\workspace\ImportReuse\tex\termpaper.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 192.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 192.
 Package rerunfilecheck Info: File `termpaper.out' has not changed.
-(rerunfilecheck)             Checksum: 850191657A5300670F5E126734787734;873.
-
-
-LaTeX Warning: There were undefined references.
-
+(rerunfilecheck)             Checksum: B2C5C51A21230845552C111747719F94;890.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 192.
  ) 
 Here is how much of TeX's memory you used:
- 9055 strings out of 493921
- 138130 string characters out of 3144873
- 280118 words of memory out of 3000000
- 12143 multiletter control sequences out of 15000+200000
- 54470 words of font info for 94 fonts, out of 3000000 for 9000
+ 9058 strings out of 493921
+ 138315 string characters out of 3144873
+ 280797 words of memory out of 3000000
+ 12145 multiletter control sequences out of 15000+200000
+ 54770 words of font info for 95 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 41i,12n,43p,1426b,454s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,11n,43p,1498b,460s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program F
 iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Fil
 es (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplb8a.pfb><C:/Program Files (x86)
 /MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program Files (x86)/MiKTeX 
 2.9/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on termpaper.pdf (12 pages, 215439 bytes).
+Output written on termpaper.pdf (13 pages, 221188 bytes).
 PDF statistics:
- 435 PDF objects out of 1000 (max. 8388607)
+ 466 PDF objects out of 1000 (max. 8388607)
  52 named destinations out of 1000 (max. 500000)
  138 words of extra memory for PDF output out of 10000 (max. 10000000)
 
