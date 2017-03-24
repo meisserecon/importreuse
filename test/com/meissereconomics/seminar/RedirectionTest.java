@@ -2,6 +2,10 @@ package com.meissereconomics.seminar;
 
 import org.junit.Test;
 
+import com.meissereconomics.trade.Country;
+import com.meissereconomics.trade.EFlowBendingMode;
+import com.meissereconomics.trade.Node;
+
 public class RedirectionTest {
 	
 	@Test
@@ -31,8 +35,9 @@ public class RedirectionTest {
 
 	protected double calcReuse(Country home, EFlowBendingMode mode, double extent) {
 		double diff = 1.0;
-		while (diff >= 0.001){
-			diff = home.calculateComposition(mode, extent);
+		double epsilon = 0.0005;
+		while (diff >= epsilon){
+			diff = home.calculateComposition(mode, extent, diff * epsilon);
 		}
 		double reuse = home.getReusedImports() / home.getExports();
 		return reuse;

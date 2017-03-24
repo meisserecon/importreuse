@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.meissereconomics.seminar.flow.MaxFlow;
+import com.meissereconomics.trade.Country;
+import com.meissereconomics.trade.EFlowBendingMode;
+import com.meissereconomics.trade.Node;
+import com.meissereconomics.trade.flow.MaxFlow;
 
 public class NodeTest {
 
@@ -54,7 +57,7 @@ public class NodeTest {
 		double diff = 1.0;
 		while (diff > ACCURACY) {
 			for (Country c : cs) {
-				diff = c.calculateComposition(EFlowBendingMode.VERTICAL_IN, 0.0);
+				diff = c.calculateComposition(EFlowBendingMode.VERTICAL_IN, 0.0, ACCURACY * diff);
 			}
 		}
 	}
