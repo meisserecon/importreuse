@@ -7,8 +7,8 @@ import org.jgrapht.alg.flow.EdmondsKarpMaximumFlow;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import com.meissereconomics.trade.Country;
-import com.meissereconomics.trade.Node;
+import com.meissereconomics.trade.graph.Country;
+import com.meissereconomics.trade.graph.Node;
 
 public class MaxFlow {
 

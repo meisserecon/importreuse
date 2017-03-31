@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.meissereconomics.trade.Country;
-import com.meissereconomics.trade.EFlowBendingMode;
-import com.meissereconomics.trade.Node;
 import com.meissereconomics.trade.flow.MaxFlow;
+import com.meissereconomics.trade.graph.Country;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
+import com.meissereconomics.trade.graph.Node;
 
 public class NodeTest {
 

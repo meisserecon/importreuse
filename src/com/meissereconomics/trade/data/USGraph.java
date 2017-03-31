@@ -11,9 +11,9 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import com.meissereconomics.trade.Country;
-import com.meissereconomics.trade.EFlowBendingMode;
-import com.meissereconomics.trade.Node;
+import com.meissereconomics.trade.graph.Country;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
+import com.meissereconomics.trade.graph.Node;
 
 public class USGraph extends InputOutputGraph {
 
@@ -144,10 +144,7 @@ public class USGraph extends InputOutputGraph {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		USGraph graph = new USGraph(true);
 		Country usa = graph.getCountry(COUNTRY);
-		Node consumption = usa.getConsumptionNode();
-		graph.collapseRandomSectors(13, 1);
-		graph.deriveOrigins(EFlowBendingMode.DEFAULT, 0.0);
-		Node[] nodes = usa.getNodeList().toArray(new Node[] {});
+		graph.deriveOrigins(EFlowBendingMode.DEFAULT, 0.6);
 		System.out.println(usa.getImportReuse());
 	}
 

@@ -3,11 +3,11 @@ package com.meissereconomics.trade.run;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.meissereconomics.trade.Country;
-import com.meissereconomics.trade.EFlowBendingMode;
-import com.meissereconomics.trade.Node;
 import com.meissereconomics.trade.data.InputOutputGraph;
 import com.meissereconomics.trade.data.USGraph;
+import com.meissereconomics.trade.graph.Country;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
+import com.meissereconomics.trade.graph.Node;
 import com.meissereconomics.trade.util.Formatter;
 
 public class GraphComparison {

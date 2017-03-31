@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.ObjDoubleConsumer;
 
-import com.meissereconomics.trade.Country;
-import com.meissereconomics.trade.EFlowBendingMode;
-import com.meissereconomics.trade.Node;
+import com.meissereconomics.trade.graph.Country;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
+import com.meissereconomics.trade.graph.Node;
 import com.meissereconomics.trade.util.InstantiatingHashmap;
 
 public class InputOutputGraph {
@@ -125,6 +125,11 @@ public class InputOutputGraph {
 			}
 		}
 		return copy;
+	}
+	
+	@Override
+	public String toString(){
+		return "database with " + getCountries().size() + " countries and " + getSectors() + " sectors";
 	}
 
 }

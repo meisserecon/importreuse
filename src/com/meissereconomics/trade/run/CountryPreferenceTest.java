@@ -6,9 +6,9 @@ import java.io.IOException;
 import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.stat.descriptive.moment.Variance;
 
-import com.meissereconomics.trade.EFlowBendingMode;
 import com.meissereconomics.trade.data.InputOutputGraph;
 import com.meissereconomics.trade.data.OldWiodInputOutputGraph;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
 import com.meissereconomics.trade.util.Average;
 import com.meissereconomics.trade.util.Formatter;
 
@@ -16,7 +16,7 @@ public class CountryPreferenceTest {
 
 	private static final int RUNS = 5;
 
-	private static final double EPSILON = 0.00001;
+	private static final double EPSILON = 0.001;
 
 	String country;
 	private double[] levels;

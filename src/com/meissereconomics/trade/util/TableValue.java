@@ -28,9 +28,13 @@ public class TableValue {
 		return array.toString();
 	}
 
-	public String getValue(String key) {
+	public String getValue(String key, boolean includeVariance) {
 		double[] values = array.get(key).getElements();
-		return new Mean().evaluate(values) + "\t" + new Variance().evaluate(values);
+		String mean = Double.toString(new Mean().evaluate(values));
+		if (includeVariance){
+			mean += "\t" + new Variance().evaluate(values);
+		}
+		return mean;
 	}
 
 }

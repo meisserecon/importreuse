@@ -9,10 +9,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import com.meissereconomics.trade.EFlowBendingMode;
 import com.meissereconomics.trade.data.InputOutputGraph;
 import com.meissereconomics.trade.data.OldWiodInputOutputGraph;
 import com.meissereconomics.trade.data.WiodInputOutputGraph;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
 import com.meissereconomics.trade.util.Formatter;
 import com.meissereconomics.trade.util.Timer;
 
@@ -21,12 +21,12 @@ public class OldAndNewWiodComparison {
 	private ExecutorService executor;
 
 	public OldAndNewWiodComparison() {
-		this.executor = Executors.newFixedThreadPool(2);
+		this.executor = Executors.newFixedThreadPool(5);
 	}
 
 	public void compare() throws InterruptedException, ExecutionException {
-		System.out.println(Formatter.toTabs("Year", "WIOD 2013 leontief", "WIOD 2013 scale-free", "WIOD 2016 leontief",
-				"WIOD 2016 scale-free"));
+		System.out.println(Formatter.toTabs("Year", "WIOD 2013 leontief", "WIOD 2013 deu", "WIOD 2016 leontief",
+				"WIOD 2016 deu"));
 		Timer timer = new Timer();
 		ArrayList<Future<String>> futures = new ArrayList<>();
 		for (int year = 2000; year <= 2011; year++) {
@@ -57,10 +57,10 @@ public class OldAndNewWiodComparison {
 	private double[] deriveImportReuse(InputOutputGraph graph1) throws FileNotFoundException, IOException {
 		graph1.deriveOrigins(EFlowBendingMode.DEFAULT, 0.0);
 		double leontief = graph1.getGlobalImportReuse();
-		GlobalImportReuse global = new GlobalImportReuse(graph1, 13, 3);
-		double bending = global.minimize(EFlowBendingMode.DEFAULT);
-		graph1.deriveOrigins(EFlowBendingMode.DEFAULT, bending);
-		double extrapolated = graph1.getGlobalImportReuse();
+//		GlobalImportReuse global = new GlobalImportReuse(graph1, 13, 3);
+//		double bending = global.minimize(EFlowBendingMode.DEFAULT);
+//		graph1.deriveOrigins(EFlowBendingMode.DEFAULT, bending);
+		double extrapolated = graph1.getCountry("DEU").getImportReuse();
 		return new double[] { leontief, extrapolated };
 	}
 

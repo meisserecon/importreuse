@@ -3,10 +3,10 @@ package com.meissereconomics.trade.run;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.meissereconomics.trade.Country;
-import com.meissereconomics.trade.EFlowBendingMode;
 import com.meissereconomics.trade.data.InputOutputGraph;
-import com.meissereconomics.trade.data.OldWiodInputOutputGraph;
+import com.meissereconomics.trade.data.WiodInputOutputGraph;
+import com.meissereconomics.trade.graph.Country;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
 import com.meissereconomics.trade.util.Table;
 
 /**
@@ -19,9 +19,11 @@ public class BendingReliefAllCountries {
 		Table results = new Table("Mode", "Sectors", "Country", "Preference");
 		EFlowBendingMode mode = EFlowBendingMode.DEFAULT;
 		results.setCurrent("Mode", mode.name());
-		for (int run = 0; run < 20; run++) {
-			InputOutputGraph iograph = new OldWiodInputOutputGraph("data/wiot11_row_sep12.CSV");
-			for (int level = OldWiodInputOutputGraph.SECTORS; level > 0; level--) {
+		InputOutputGraph graph = new WiodInputOutputGraph(2008);
+		System.out.println("BendingReliefAllCountries with " + graph);
+		for (int run = 0; run < 10; run++) {
+			InputOutputGraph iograph = graph.copy();
+			for (int level = graph.getSectors(); level > 0; level--) {
 				results.setCurrent("Sectors", Integer.toString(level));
 				iograph.collapseRandomSectors(run * 31, level);
 

@@ -2,9 +2,9 @@ package com.meissereconomics.seminar;
 
 import org.junit.Test;
 
-import com.meissereconomics.trade.Country;
-import com.meissereconomics.trade.EFlowBendingMode;
-import com.meissereconomics.trade.Node;
+import com.meissereconomics.trade.graph.Country;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
+import com.meissereconomics.trade.graph.Node;
 
 public class RedirectionTest {
 	

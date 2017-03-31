@@ -9,9 +9,9 @@ import org.apache.commons.math3.stat.descriptive.moment.Variance;
 import org.apache.commons.math3.util.DoubleArray;
 import org.apache.commons.math3.util.ResizableDoubleArray;
 
-import com.meissereconomics.trade.EFlowBendingMode;
 import com.meissereconomics.trade.data.InputOutputGraph;
 import com.meissereconomics.trade.data.OldWiodInputOutputGraph;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
 import com.meissereconomics.trade.util.InstantiatingHashmap;
 
 /**

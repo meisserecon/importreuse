@@ -6,10 +6,10 @@ import java.io.IOException;
 import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.stat.descriptive.moment.Variance;
 
-import com.meissereconomics.trade.Country;
-import com.meissereconomics.trade.EFlowBendingMode;
 import com.meissereconomics.trade.data.InputOutputGraph;
 import com.meissereconomics.trade.data.OldWiodInputOutputGraph;
+import com.meissereconomics.trade.graph.Country;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
 import com.meissereconomics.trade.util.Formatter;
 
 public class CountryPreferenceTestLarge {

@@ -11,8 +11,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import com.meissereconomics.trade.Country;
-import com.meissereconomics.trade.EFlowBendingMode;
+import com.meissereconomics.trade.graph.Country;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
 import com.meissereconomics.trade.util.Timer;
 
 public class OldWiodInputOutputGraph extends InputOutputGraph {
@@ -68,7 +68,7 @@ public class OldWiodInputOutputGraph extends InputOutputGraph {
 				if (millions != 0) {
 					String destIndustry = industries.get(index);
 					if (destIndustry.equals("Total output")) {
-						assert Math.abs(c.getNode(sourceIndustry).getOutputs() - millions) < 0.1;
+						assert Math.abs(c.getNode(sourceIndustry).getOutputsInclConsumption() - millions) < 0.1;
 					} else if (destIndustry.length() > 0) {
 						String destCountry = importers.get(index);
 						Country importer = getCountry(destCountry);
@@ -111,6 +111,11 @@ public class OldWiodInputOutputGraph extends InputOutputGraph {
 		timer.time("Loaded graph");
 		graph.deriveOrigins(EFlowBendingMode.DEFAULT, 0.0);
 		timer.time("Derived origins, result " + graph.getGlobalImportReuse());
+	}
+	
+	@Override
+	public String toString(){
+		return "WIOD 2013 " + super.toString();
 	}
 
 }

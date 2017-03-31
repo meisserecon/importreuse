@@ -3,17 +3,24 @@ package com.meissereconomics.trade.run;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.meissereconomics.trade.EFlowBendingMode;
 import com.meissereconomics.trade.data.InputOutputGraph;
 import com.meissereconomics.trade.data.OldWiodInputOutputGraph;
+import com.meissereconomics.trade.data.WiodInputOutputGraph;
+import com.meissereconomics.trade.graph.EFlowBendingMode;
 
 public class SingleCountryRelief {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		EFlowBendingMode mode = EFlowBendingMode.IMPORTS_AWARE_MID;
-		InputOutputGraph graph = new OldWiodInputOutputGraph(2007); // new USGraph(false); //
-		CountryPreferenceTest test = new CountryPreferenceTest(graph, "DEU", 123135, 10);
-		System.out.println("Printing individual runs for " + test.country + " in mode " + mode);
+		EFlowBendingMode mode = EFlowBendingMode.DEFAULT;
+		int year = 2007;
+		calculateRelief(mode, new WiodInputOutputGraph(year));
+		calculateRelief(mode, new OldWiodInputOutputGraph(year));
+	}
+
+	private static void calculateRelief(EFlowBendingMode mode, InputOutputGraph graph)
+			throws FileNotFoundException, IOException {
+		CountryPreferenceTest test = new CountryPreferenceTest(graph, "USA", 12335, 1);
+		System.out.println("Printing individual runs for " + test.country + " in mode " + mode + " on " + graph);
 		double bending = test.minimize(mode);
 		double[][] reuseOpt = test.calculateReuse();
 		double staticBending = 0.0;

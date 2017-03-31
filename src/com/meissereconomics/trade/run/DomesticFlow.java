@@ -3,9 +3,9 @@ package com.meissereconomics.trade.run;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.meissereconomics.trade.Country;
 import com.meissereconomics.trade.data.InputOutputGraph;
 import com.meissereconomics.trade.data.OldWiodInputOutputGraph;
+import com.meissereconomics.trade.graph.Country;
 
 /**
  * Running this script should produce output "DomesticFlow.out", a table showing the maximum possible
