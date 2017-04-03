@@ -12,9 +12,11 @@ import com.meissereconomics.trade.util.InstantiatingHashmap;
 
 public class InputOutputGraph {
 	
+	private final int year;
 	private final InstantiatingHashmap<String, Country> countries;
 
-	public InputOutputGraph(final int countries) {
+	public InputOutputGraph(final int year, final int countries) {
+		this.year = year;
 		this.countries = new InstantiatingHashmap<String, Country>() {
 
 			private int count = 0;
@@ -32,11 +34,11 @@ public class InputOutputGraph {
 		}
 	}
 
-	public void collapseRandomSectors(int seed, int i) {
+	public void collapseRandomSectors(long seed, int i) {
 		collapseRandomSectors(seed, i, null);
 	}
 
-	public void collapseRandomSectors(int seed, int i, String except) {
+	public void collapseRandomSectors(long seed, int i, String except) {
 		for (Country c : countries.values()) {
 			if (!c.getName().equals(except)) {
 				seed += 131313;
@@ -110,7 +112,7 @@ public class InputOutputGraph {
 	}
 	
 	public InputOutputGraph copy(){
-		InputOutputGraph copy = new InputOutputGraph(countries.size());
+		InputOutputGraph copy = new InputOutputGraph(year, countries.size());
 		for (final Country c: countries.values()){
 			for (final Node n: c.getNodeList()){
 				n.forEachOutput(new ObjDoubleConsumer<Node>() {
@@ -129,7 +131,11 @@ public class InputOutputGraph {
 	
 	@Override
 	public String toString(){
-		return "database with " + getCountries().size() + " countries and " + getSectors() + " sectors";
+		return " database for " + getYear() + " with " + getCountries().size() + " countries and " + getSectors() + " sectors";
+	}
+
+	public int getYear() {
+		return year;
 	}
 
 }

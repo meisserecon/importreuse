@@ -17,20 +17,17 @@ import com.meissereconomics.trade.util.Timer;
 
 public class WiodInputOutputGraph extends InputOutputGraph {
 
-	public static final String[] COUNTRY_LIST = new String[] { "AUS", "AUT", "BEL", "BGR", "BRA", "CAN", "CHE", "CHN",
+	private static final String[] COUNTRY_LIST = new String[] { "AUS", "AUT", "BEL", "BGR", "BRA", "CAN", "CHE", "CHN",
 			"CYP", "CZE", "DEU", "DNK", "ESP", "EST", "FIN", "FRA", "GBR", "GRC", "HRV", "HUN", "IDN", "IND", "IRL",
 			"ITA", "JPN", "KOR", "LTU", "LUX", "LVA", "MEX", "MLT", "NLD", "NOR", "POL", "PRT", "ROU", "RoW", "RUS",
 			"SVK", "SVN", "SWE", "TUR", "TWN", "USA" };
 
-	public static final int COUNTRIES = COUNTRY_LIST.length;
-	public static final int SECTORS = 56;
-
-	public WiodInputOutputGraph(String filename) throws FileNotFoundException, IOException {
-		this(new File(filename));
+	public WiodInputOutputGraph(int year) throws FileNotFoundException, IOException {
+		this(year, new File("data/WIOT" + year + "_Nov16_ROW.csv"));
 	}
-
-	public WiodInputOutputGraph(File csvFile) throws FileNotFoundException, IOException {
-		super(COUNTRIES);
+	
+	public WiodInputOutputGraph(int year, File csvFile) throws FileNotFoundException, IOException {
+		super(year, COUNTRY_LIST.length);
 		try (CSVParser parser = new CSVParser(new FileReader(csvFile), CSVFormat.EXCEL.withDelimiter(';'))) {
 			Iterator<CSVRecord> iter = parser.iterator();
 			iter.next();
@@ -50,10 +47,6 @@ public class WiodInputOutputGraph extends InputOutputGraph {
 		for (Country c : getCountries()) {
 			c.turnNegativeLinks();
 		}
-	}
-
-	public WiodInputOutputGraph(int year) throws FileNotFoundException, IOException {
-		this("data/WIOT" + year + "_Nov16_ROW.csv");
 	}
 
 	private boolean parse(Iterator<String> iter, ArrayList<String> industries, ArrayList<String> importers) {

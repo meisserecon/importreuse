@@ -17,17 +17,13 @@ import com.meissereconomics.trade.util.Timer;
 
 public class OldWiodInputOutputGraph extends InputOutputGraph {
 
-	public static final String[] COUNTRY_LIST = new String[]{"AUS", "AUT", "BEL", "BGR", "BRA", "CAN", "CHN", "CYP", "CZE", "DEU", "DNK", "ESP", "EST", "FIN", "FRA", "GBR", "GRC", "HUN", "IDN", "IND", "IRL", "ITA", "JPN", "KOR", "LTU", "LUX", "LVA", "MEX", "MLT", "NLD", "POL", "PRT", "ROU", "RoW", "RUS", "SVK", "SVN", "SWE", "TUR", "TWN", "USA"};
+	private static final String[] COUNTRY_LIST = new String[]{"AUS", "AUT", "BEL", "BGR", "BRA", "CAN", "CHN", "CYP", "CZE", "DEU", "DNK", "ESP", "EST", "FIN", "FRA", "GBR", "GRC", "HUN", "IDN", "IND", "IRL", "ITA", "JPN", "KOR", "LTU", "LUX", "LVA", "MEX", "MLT", "NLD", "POL", "PRT", "ROU", "RoW", "RUS", "SVK", "SVN", "SWE", "TUR", "TWN", "USA"};
 	
-	public static final int COUNTRIES = COUNTRY_LIST.length;
-	public static final int SECTORS = 35;
+	private static final int SECTORS = 35;
 
-	public OldWiodInputOutputGraph(String filename) throws FileNotFoundException, IOException {
-		this(new File(filename));
-	}
-
-	public OldWiodInputOutputGraph(File csvFile) throws FileNotFoundException, IOException {
-		super(COUNTRIES);
+	public OldWiodInputOutputGraph(int year) throws FileNotFoundException, IOException {
+		super(year, COUNTRY_LIST.length);
+		File csvFile = new File(getFilename(year));
 		try (CSVParser parser = new CSVParser(new FileReader(csvFile), CSVFormat.EXCEL.withDelimiter(';'))) {
 			Iterator<CSVRecord> iter = parser.iterator();
 			iter.next();
@@ -47,10 +43,6 @@ public class OldWiodInputOutputGraph extends InputOutputGraph {
 		for (Country c : getCountries()) {
 			c.turnNegativeLinks();
 		}
-	}
-
-	public OldWiodInputOutputGraph(int year) throws FileNotFoundException, IOException {
-		this(getFilename(year));
 	}
 
 	private boolean parse(Iterator<String> iter, ArrayList<String> industries, ArrayList<String> importers) {

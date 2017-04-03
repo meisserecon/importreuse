@@ -126,8 +126,9 @@ public class Country implements Comparable<Country> {
 	}
 
 	public void turnNegativeLinks() {
+		Node consumption = getConsumptionNode();
 		for (Node n : this.nodes.values()) {
-			n.turnNegativeInputs();
+			n.turnNegativeInputs(consumption);
 		}
 	}
 
@@ -151,7 +152,7 @@ public class Country implements Comparable<Country> {
 		return tot;
 	}
 
-	public void collapseRandomSectors(int seed, int sectors) {
+	public void collapseRandomSectors(long seed, int sectors) {
 		Random rand = new Random(seed);
 		ArrayList<Node> nodes = new ArrayList<>(getNodeList());
 		nodes.remove(0); // remove consumption
@@ -239,6 +240,15 @@ public class Country implements Comparable<Country> {
 
 	public int getSectors() {
 		return nodes.getNonConsumptionSectors();
+	}
+
+	public Node getRandomNonConsumptionNode(Random rand) {
+		Node n = getConsumptionNode();
+		ArrayList<Node> list = nodes.getList();
+		while (n.isConsumption()){
+			n = list.get(rand.nextInt(list.size()));
+		}
+		return n;
 	}
 
 }

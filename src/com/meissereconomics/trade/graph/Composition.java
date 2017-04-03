@@ -22,6 +22,10 @@ public class Composition {
 		this.shares = new double[countries];
 		this.shares[home] = output + consumption - input;
 		assert !Double.isNaN(this.shares[home]);
+		if (this.shares[home] < 0.0){
+			assert this.shares[home] >= -0.0001;
+			this.shares[home] = 0.0;
+		}
 		this.normalized = false;
 	}
 
@@ -74,9 +78,12 @@ public class Composition {
 
 	public void redirectDomesticInputs(EFlowBendingMode mode, double degree) {
 		assert !isNormalized();
-		this.shares[home] -= mode.calculateDirectConsumption(shares[home], input, output, consumption, degree);
+		double directConsumption = mode.calculateDirectConsumption(shares[home], input, output, consumption, degree);
+		assert directConsumption <= this.shares[home] + 0.01;
+		this.shares[home] -= directConsumption;
 		assert !Double.isNaN(this.shares[home]);
 		if (this.shares[home] < 0.0){
+			assert this.shares[home] >= -0.1;
 			this.shares[home] = 0.0; // fix rounding errors.
 		}
 	}

@@ -31,11 +31,12 @@ public class Figure1Resolution {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
-		printResolutionGraph(new OldWiodInputOutputGraph("data/wiot11_row_sep12.CSV"));
+		printResolutionGraph(new OldWiodInputOutputGraph(2011));
 //		printResolutionGraph(new USGraph(true));
 	}
 
 	protected static void printResolutionGraph(InputOutputGraph original) throws FileNotFoundException, IOException {
+		System.out.println("Calculating resolution graph for " + original);
 		long t0 = System.nanoTime();
 		InstantiatingHashmap<Integer, DoubleArray> inputReuse = createMap();
 		for (int run = 0; run < 10; run++) {

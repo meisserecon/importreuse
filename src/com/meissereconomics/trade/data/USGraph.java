@@ -13,7 +13,6 @@ import org.apache.commons.csv.CSVRecord;
 
 import com.meissereconomics.trade.graph.Country;
 import com.meissereconomics.trade.graph.EFlowBendingMode;
-import com.meissereconomics.trade.graph.Node;
 
 public class USGraph extends InputOutputGraph {
 
@@ -30,7 +29,7 @@ public class USGraph extends InputOutputGraph {
 	}
 
 	public USGraph(File csvFile, boolean large) throws FileNotFoundException, IOException {
-		super(2);
+		super(2007, 2);
 		try (CSVParser parser = new CSVParser(new FileReader(csvFile), CSVFormat.EXCEL.withDelimiter(';'))) {
 			Iterator<CSVRecord> iter = parser.iterator();
 			iter.next(); // header

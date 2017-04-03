@@ -31,38 +31,38 @@ public class ReuseDriversOverTime {
 	private static final double EPSILON = 0.001;
 	private static final EFlowBendingMode MODE = EFlowBendingMode.DEFAULT;
 
-	private int year;
 	private double[] levels;
+	private InputOutputGraph original;
 	private InputOutputGraph[][] graphs;
 	private ObjDoubleMap<String> bendings, leontief;
 
-	public ReuseDriversOverTime(int seed, int year, int runs) throws FileNotFoundException, IOException {
-		this.year = year;
-		this.levels = new double[OldWiodInputOutputGraph.SECTORS];
+	public ReuseDriversOverTime(InputOutputGraph original, int seed, int runs) throws FileNotFoundException, IOException {
+		this.original = original;
+		this.levels = new double[original.getSectors()];
 		this.bendings = HashObjDoubleMaps.newMutableMap();
 		this.leontief = HashObjDoubleMaps.newMutableMap();
 		this.bendings = HashObjDoubleMaps.newMutableMap();
-		this.graphs = new InputOutputGraph[OldWiodInputOutputGraph.SECTORS][runs];
+		this.graphs = new InputOutputGraph[original.getSectors()][runs];
 		for (int i = 0; i < graphs.length; i++) {
 			int sector = i + 1;
 			this.levels[i] = sector;
 			for (int run = 0; run < runs; run++) {
-				InputOutputGraph graph = new OldWiodInputOutputGraph(year);
-				graph.collapseRandomSectors(run * 31 + seed * 12313, sector);
-				if (sector == OldWiodInputOutputGraph.SECTORS && run == 0) {
-					graph.deriveOrigins(MODE, 0.0);
-					for (Country c : graph.getCountries()) {
+				InputOutputGraph copy = original.copy();
+				copy.collapseRandomSectors(run * 31 + seed * 12313, sector);
+				if (sector == original.getSectors() && run == 0) {
+					copy.deriveOrigins(MODE, 0.0);
+					for (Country c : copy.getCountries()) {
 						this.leontief.put(c.getName(), c.getImportReuse());
 						this.bendings.put(c.getName(), DEFAULT_BENDING);
 					}
 				}
-				graph.deriveOrigins(MODE, DEFAULT_BENDING);
-				if (sector == OldWiodInputOutputGraph.SECTORS || sector == 1){
+				copy.deriveOrigins(MODE, DEFAULT_BENDING);
+				if (sector == original.getSectors() || sector == 1){
 					// graph 1 and 35 are always the same
-					this.graphs[i] = new InputOutputGraph[]{graph};
+					this.graphs[i] = new InputOutputGraph[]{copy};
 					break;
 				} else {
-					this.graphs[i][run] = graph;
+					this.graphs[i][run] = copy;
 				}
 			}
 		}
@@ -84,11 +84,11 @@ public class ReuseDriversOverTime {
 			double variance = new Variance().evaluate(reuses);
 			double covariance = new Covariance().covariance(levels, reuses);
 			double leontiefReuse = leontief.getDouble(country);
-			Country c = graphs[OldWiodInputOutputGraph.SECTORS - 1][0].getCountry(country);
+			Country c = graphs[original.getSectors() - 1][0].getCountry(country);
 			double exports = c.getExports();
 			double maxreuse = c.getMaxReusedImports() / exports;
 			double minreuse = c.getMinReusedImports() / exports;
-			System.out.println(Formatter.toTabs(year, country, bending, reuse, variance, covariance, exports, c.getImports(), c.getConsumption(), maxreuse, minreuse, leontiefReuse));
+			System.out.println(Formatter.toTabs(original.getYear(), country, bending, reuse, variance, covariance, exports, c.getImports(), c.getConsumption(), maxreuse, minreuse, leontiefReuse));
 		}
 	}
 
@@ -176,7 +176,7 @@ public class ReuseDriversOverTime {
 		long t0 = System.nanoTime();
 		System.out.println("Year\tCountry\tBending\tReuse\tVariance\tCovariance\tExports\tImports\tConsumption\tMax Flow Reuse\tMin Flow Reuse\tLeontief Reuse");
 		for (int year = 2011; year >= 1995; year--) {
-			ReuseDriversOverTime bendings = new ReuseDriversOverTime(11233, year, RUNS);
+			ReuseDriversOverTime bendings = new ReuseDriversOverTime(new OldWiodInputOutputGraph(year), 11233, RUNS);
 			bendings.optimizeAll();
 			bendings.printAll();
 			System.out.println("Processed " + year + " after " + (System.nanoTime() - t0)/1000000 + "ms");

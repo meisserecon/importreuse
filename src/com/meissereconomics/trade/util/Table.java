@@ -9,11 +9,13 @@ public class Table {
 	private String[] labels;
 	private Set<String> types;
 	private TableKey current;
+	private boolean printedLabels;
 	private InstantiatingHashmap<TableKey, TableValue> entries;
 
 	public Table(String... labels) {
 		this.labels = labels;
 		this.types = new TreeSet<>();
+		this.printedLabels = false;
 		this.current = new TableKey(labels);
 		this.entries = new InstantiatingHashmap<TableKey, TableValue>() {
 
@@ -37,8 +39,22 @@ public class Table {
 	public void printAll() {
 		printAll(true);
 	}
+	
+	public void printAndFlush(boolean includeVariance){
+		if (!printedLabels){
+			printLabels(includeVariance);
+			printedLabels=true;
+		}
+		printRows(includeVariance);
+		entries.clear();
+	}
 
 	public void printAll(boolean includeVariance) {
+		printLabels(includeVariance);
+		printRows(includeVariance);
+	}
+
+	protected void printLabels(boolean includeVariance) {
 		String row = Formatter.toTabs((Object[]) labels);
 		for (String type : types) {
 			row += "\t" + type;
@@ -47,6 +63,9 @@ public class Table {
 			}
 		}
 		System.out.println(row);
+	}
+
+	protected void printRows(boolean includeVariance) {
 		entries.forEach(new BiConsumer<TableKey, TableValue>() {
 
 			@Override

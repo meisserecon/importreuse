@@ -37,8 +37,8 @@ public class Node {
 		this.inputs = new Edges();
 		this.outputs = new Edges();
 	}
-	
-	public void forEachOutput(ObjDoubleConsumer<Node> consumer){
+
+	public void forEachOutput(ObjDoubleConsumer<Node> consumer) {
 		this.outputs.forEach(consumer);
 	}
 
@@ -70,14 +70,14 @@ public class Node {
 
 		Composition comp = new Composition(origin.getCountryCount(), country.getNumber(), input, output, cons);
 		inputs.forEach(new ObjDoubleConsumer() {
-			
+
 			double threshold = epsilon * input;
 
 			@Override
 			public void accept(Object t, double value) {
-				if (value >= threshold){
+				if (value >= threshold) {
 					// Only check important links first, proceed to others as epsilon decreases
-					comp.include(((Node)t).getOrigin(), value);
+					comp.include(((Node) t).getOrigin(), value);
 				}
 			}
 		});
@@ -179,9 +179,9 @@ public class Node {
 	public Country getCountry() {
 		return country;
 	}
-	
+
 	public void linkOrAdd(Node dest, double value) {
-		if (outputs.containsKey(dest)){
+		if (outputs.containsKey(dest)) {
 			updateLink(dest, outputs.getDouble(dest) + value);
 		} else {
 			linkTo(dest, value);
@@ -205,8 +205,14 @@ public class Node {
 		node.inputs.put(this, millions);
 	}
 
-	public void turnNegativeInputs() {
+	public void turnNegativeInputs(Node consumption) {
 		double value = getCreatedValue();
+		int maxloop = 100;
+		while (value < 0.0 && maxloop-- > 0){
+			assert this != consumption;
+			linkOrAdd(consumption, -value);
+			value = getCreatedValue();
+		}
 		Iterator<Map.Entry<Node, Double>> iter = inputs.entryIterator();
 		while (iter.hasNext()) {
 			Map.Entry<Node, Double> next = iter.next();
@@ -258,7 +264,8 @@ public class Node {
 	}
 
 	public String getStats() {
-		return industry + " generates " + getCreatedValue() + " with inputs " + getInputs() + " and outputs " + getOutputsInclConsumption() + ", while importing " + getImports() + " and exporting " + getExports();
+		return industry + " generates " + getCreatedValue() + " with inputs " + getInputs() + " and outputs " + getOutputsInclConsumption() + ", while importing " + getImports() + " and exporting "
+				+ getExports();
 	}
 
 	public boolean isConsumption() {
@@ -277,12 +284,12 @@ public class Node {
 	@Override
 	public String toString() {
 		String s1 = Formatter.toTabs(country, industry, getInputs(), getOutputsInclConsumption(), getDomesticConsumption());
-//		s1 += "\tINPUTS:";
-//		for (Map.Entry<Node, Double> e : inputs.entrySet()) {
-//			if (e.getKey().country == country) {
-//				s1 += "\t" + e.getKey().industry + "\t" + e.getValue();
-//			}
-//		}
+		// s1 += "\tINPUTS:";
+		// for (Map.Entry<Node, Double> e : inputs.entrySet()) {
+		// if (e.getKey().country == country) {
+		// s1 += "\t" + e.getKey().industry + "\t" + e.getValue();
+		// }
+		// }
 		// s1 += "\tOUTPUTS:";
 		// for (Map.Entry<Node, Double> e : outputs.entrySet()) {
 		// s1 += "\t" + e.getKey() + "\t" + e.getValue();

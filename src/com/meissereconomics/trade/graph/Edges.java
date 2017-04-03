@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.function.DoubleConsumer;
 import java.util.function.ObjDoubleConsumer;
 
+import com.meissereconomics.trade.util.Formatter;
+
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMap;
 import net.openhft.koloboke.collect.map.hash.HashObjDoubleMaps;
 
@@ -97,6 +99,22 @@ public class Edges {
 			sumTime = modifications;
 		}
 		return sum;
+	}
+	
+	@Override
+	public String toString(){
+		final String[] msg = new String[]{"Edges: "};
+		final double sum = getSum();
+		forEach(new ObjDoubleConsumer<Node>() {
+			
+			@Override
+			public void accept(Node t, double value) {
+				if (value > sum / 50){
+					msg[0] += t.getIndustry() + " " + Formatter.toString(value) + ", ";
+				}
+			}
+		});
+		return msg[0] + "...";
 	}
 
 }

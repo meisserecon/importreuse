@@ -15,20 +15,20 @@ import com.meissereconomics.trade.util.Formatter;
 
 public class Optimizer {
 
-	private static final int RUNS = 5;
-
-	private static final double EPSILON = 0.01;
-	private static final double BENDING_EPSILON = 0.001;
+	private static final double EPSILON = 0.001;
+	private static final double BENDING_EPSILON = 0.0001;
 
 	String country;
 	private double[] levels;
 	private InputOutputGraph[][] graphs;
 
-	public Optimizer(InputOutputGraph graph, String country, int seed, int runs) throws FileNotFoundException, IOException {
+	public Optimizer(InputOutputGraph graph, String country, int seed, int runs, boolean fastAndDirty) {
 		this.country = country;
 		this.levels = new double[graph.getSectors()];
 		this.graphs = new InputOutputGraph[levels.length][runs];
-		graph.collapseRandomSectors(13, 1, country);
+		if (fastAndDirty) {
+			graph.collapseRandomSectors(13, 1, country);
+		}
 		for (int i = 0; i < graphs.length; i++) {
 			int sector = i + 1;
 			this.levels[i] = sector;
@@ -41,8 +41,46 @@ public class Optimizer {
 		}
 	}
 
-	public double minimize(EFlowBendingMode mode) {
+	public double minimizeError(EFlowBendingMode mode) {
 		return threePointSearch(mode, 0.0, 1.0);
+	}
+	
+	public double minimizeCovariance(EFlowBendingMode mode) {
+		return binarySearch(mode, 0.0, 1.0);
+	}
+
+	private double binarySearch(EFlowBendingMode mode, double bending1, double bending2) {
+		if (bending1 > bending2) {
+			return binarySearch(mode, bending2, bending1);
+		} else {
+			double cov1 = calculateCovariance(mode, bending1);
+			if (cov1 <= 0.0) {
+				return bending1;
+			}
+			double cov2 = calculateCovariance(mode, bending2);
+			if (cov2 >= 0.0) {
+				return bending2;
+			}
+			while (Math.abs(bending2 - bending1) > EPSILON) {
+				double middle = (bending1 + bending2) / 2;
+				double covMiddle = calculateCovariance(mode, middle);
+				if (covMiddle < 0.0) {
+					cov2 = covMiddle;
+					bending2 = middle;
+				} else {
+					cov1 = covMiddle;
+					bending1 = middle;
+				}
+			}
+			return (bending1 + bending2) / 2;
+		}
+	}
+
+	protected double calculateCovariance(EFlowBendingMode mode, double bending) {
+		setBending(mode, bending);
+		double[] avgs = average(calculateReuse()); 
+		double cov = new Covariance().covariance(levels, avgs);
+		return cov;
 	}
 
 	private double threePointSearch(EFlowBendingMode mode, double left, double right) {
@@ -131,10 +169,10 @@ public class Optimizer {
 		System.out.println("Country\tmode\tbending\tvar\tcov\tstdDev\tSectors...");
 		InputOutputGraph graph = new WiodInputOutputGraph(2008);
 		for (Country country : graph.getCountries()) {
-			Optimizer test = new Optimizer(graph.copy(), country.getName(), 5323431 ^ country.getName().hashCode(), RUNS);
-//			EFlowBendingMode mode = EFlowBendingMode.DEFAULT;
+			Optimizer test = new Optimizer(graph.copy(), country.getName(), 5323431 ^ country.getName().hashCode(), 5, true);
+			// EFlowBendingMode mode = EFlowBendingMode.DEFAULT;
 			for (EFlowBendingMode mode : EFlowBendingMode.values()) {
-				double bending = test.minimize(mode);
+				double bending = test.minimizeCovariance(mode);
 				test.print(mode.name(), bending);
 			}
 			test.setBending(EFlowBendingMode.DEFAULT, 0.0);

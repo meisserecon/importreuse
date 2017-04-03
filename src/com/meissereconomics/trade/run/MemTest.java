@@ -4,14 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.meissereconomics.trade.data.InputOutputGraph;
-import com.meissereconomics.trade.data.OldWiodInputOutputGraph;
+import com.meissereconomics.trade.data.WiodInputOutputGraph;
 
 public class MemTest {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
 		System.out.println("Start");
 		printMem();
-		InputOutputGraph g = new OldWiodInputOutputGraph("data/wiot11_row_sep12.CSV");
+		InputOutputGraph g = new WiodInputOutputGraph(2011);
 		printMem();
 		g.collapseRandomSectors(13, 1);
 		printMem();

@@ -2,9 +2,9 @@ package com.meissereconomics.trade.graph;
 
 public enum EFlowBendingMode {
 
-	HORIZONTAL_MIN, HORIZONTAL_MAX, HORIZONTAL_IN, HORIZONTAL_OUT, HORIZONTAL_MID, VERTICAL_IN, VERTICAL_OUT, VERTICAL_MID, IMPORTS_AWARE_MIN, IMPORTS_AWARE_MAX, IMPORTS_AWARE_CON, IMPORTS_AWARE_IN, IMPORTS_AWARE_MID;
+	HORIZONTAL_MIN, HORIZONTAL_MAX, HORIZONTAL_IN, HORIZONTAL_IN_IMP_AWARE, HORIZONTAL_OUT, HORIZONTAL_MID, VERTICAL_IN, VERTICAL_OUT, VERTICAL_MID, IMPORTS_AWARE_MIN, IMPORTS_AWARE_MAX, IMPORTS_AWARE_CON, IMPORTS_AWARE_IN, IMPORTS_AWARE_MID;
 
-	public static final EFlowBendingMode DEFAULT = EFlowBendingMode.HORIZONTAL_MID;
+	public static final EFlowBendingMode DEFAULT = EFlowBendingMode.HORIZONTAL_IN;
 
 	public double calculateDirectConsumption(double allDomestic, double input, double output, double consumption, double degree) {
 		double valueCreation = consumption + output - input;
@@ -33,6 +33,18 @@ public enum EFlowBendingMode {
 		case HORIZONTAL_IN: {
 			double amount = Math.min(input * degree, output);
 			return translateToVertical(valueCreation, consumption, input, output, amount);
+		}
+		case HORIZONTAL_IN_IMP_AWARE: {
+			double imports = valueCreation + input - allDomestic;
+			double passThroughTrade = Math.min(imports * degree, output);
+			double normallyMixedOutputs = output - passThroughTrade;
+			if (normallyMixedOutputs <= 0.0) {
+				return allDomestic;
+			} else {
+				double temp = degree + (1 - degree) * normallyMixedOutputs / ((1 - degree) * imports + allDomestic);
+				double newDomestic = output / temp - imports;
+				return allDomestic - newDomestic;
+			}
 		}
 		case HORIZONTAL_MID: {
 			double mid = (input + output) / 2 * degree;

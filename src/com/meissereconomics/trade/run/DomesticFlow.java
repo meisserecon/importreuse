@@ -20,13 +20,13 @@ public class DomesticFlow {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
 		long t0 = System.nanoTime();
-		InputOutputGraph iograph = new OldWiodInputOutputGraph("data/wiot11_row_sep12.CSV");
+		InputOutputGraph iograph = new OldWiodInputOutputGraph(2011);
 		System.out.print("Sectors");
 		for (Country c : iograph.getCountries()) {
 			System.out.print("\t" + c.toString() + " Max\t" + c.toString() + " Min\t" + c.toString() + " Exports");
 		}
 		System.out.println();
-		for (int level = OldWiodInputOutputGraph.SECTORS; level > 0; level--) {
+		for (int level = iograph.getSectors(); level > 0; level--) {
 			iograph.collapseRandomSectors(13, level);
 			System.out.print(level);
 			for (Country c : iograph.getCountries()) {

@@ -8,6 +8,7 @@ import org.apache.commons.math3.stat.descriptive.moment.Variance;
 
 import com.meissereconomics.trade.data.InputOutputGraph;
 import com.meissereconomics.trade.data.OldWiodInputOutputGraph;
+import com.meissereconomics.trade.graph.Country;
 import com.meissereconomics.trade.graph.EFlowBendingMode;
 import com.meissereconomics.trade.util.Average;
 import com.meissereconomics.trade.util.Formatter;
@@ -121,9 +122,10 @@ public class CountryPreferenceTest {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		for (String country : OldWiodInputOutputGraph.COUNTRY_LIST) {
-			InputOutputGraph graph = new OldWiodInputOutputGraph(2011);
-			CountryPreferenceTest test = new CountryPreferenceTest(graph, country, 532431 ^ country.hashCode(), RUNS);
+		InputOutputGraph original = new OldWiodInputOutputGraph(2011);
+		for (Country country : original.getCountries()) {
+			InputOutputGraph graph = original.copy();
+			CountryPreferenceTest test = new CountryPreferenceTest(graph, country.getName(), 532431 ^ country.getName().hashCode(), RUNS);
 			for (EFlowBendingMode mode : EFlowBendingMode.values()) {
 				double bending = test.minimize(mode);
 				test.print(mode.name(), bending);
