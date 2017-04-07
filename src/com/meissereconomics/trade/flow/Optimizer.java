@@ -18,12 +18,14 @@ public class Optimizer {
 	private static final double EPSILON = 0.001;
 	private static final double BENDING_EPSILON = 0.0001;
 
-	String country;
 	private double[] levels;
 	private InputOutputGraph[][] graphs;
+	
+	public Optimizer(InputOutputGraph graph, int seed, int runs) {
+		this(graph, null, seed, runs, false);
+	}
 
 	public Optimizer(InputOutputGraph graph, String country, int seed, int runs, boolean fastAndDirty) {
-		this.country = country;
 		this.levels = new double[graph.getSectors()];
 		this.graphs = new InputOutputGraph[levels.length][runs];
 		if (fastAndDirty) {
@@ -34,36 +36,36 @@ public class Optimizer {
 			this.levels[i] = sector;
 			for (int run = 0; run < runs; run++) {
 				InputOutputGraph g = graph.copy();
-				g.getCountry(country).collapseRandomSectors(run * 31 + seed, sector);
+				g.collapseRandomSectors(run * 31 + seed, sector);
 				g.deriveOrigins(EFlowBendingMode.DEFAULT, 0.0);
 				graphs[i][run] = g;
 			}
 		}
 	}
 
-	public double minimizeError(EFlowBendingMode mode) {
-		return threePointSearch(mode, 0.0, 1.0);
+	public double minimizeError(String country, EFlowBendingMode mode) {
+		return threePointSearch(country, mode, 0.0, 1.0);
 	}
 	
-	public double minimizeCovariance(EFlowBendingMode mode) {
-		return binarySearch(mode, 0.0, 1.0);
+	public double minimizeCovariance(String country, EFlowBendingMode mode) {
+		return binarySearch(country, mode, 0.0, 1.0);
 	}
 
-	private double binarySearch(EFlowBendingMode mode, double bending1, double bending2) {
+	private double binarySearch(String country, EFlowBendingMode mode, double bending1, double bending2) {
 		if (bending1 > bending2) {
-			return binarySearch(mode, bending2, bending1);
+			return binarySearch(country, mode, bending2, bending1);
 		} else {
-			double cov1 = calculateCovariance(mode, bending1);
+			double cov1 = calculateCovariance(country, mode, bending1);
 			if (cov1 <= 0.0) {
 				return bending1;
 			}
-			double cov2 = calculateCovariance(mode, bending2);
+			double cov2 = calculateCovariance(country, mode, bending2);
 			if (cov2 >= 0.0) {
 				return bending2;
 			}
 			while (Math.abs(bending2 - bending1) > EPSILON) {
 				double middle = (bending1 + bending2) / 2;
-				double covMiddle = calculateCovariance(mode, middle);
+				double covMiddle = calculateCovariance(country, mode, middle);
 				if (covMiddle < 0.0) {
 					cov2 = covMiddle;
 					bending2 = middle;
@@ -76,25 +78,25 @@ public class Optimizer {
 		}
 	}
 
-	protected double calculateCovariance(EFlowBendingMode mode, double bending) {
-		setBending(mode, bending);
-		double[] avgs = average(calculateReuse()); 
+	protected double calculateCovariance(String country, EFlowBendingMode mode, double bending) {
+		setBending(country, mode, bending);
+		double[] avgs = average(calculateReuse(country)); 
 		double cov = new Covariance().covariance(levels, avgs);
 		return cov;
 	}
 
-	private double threePointSearch(EFlowBendingMode mode, double left, double right) {
+	private double threePointSearch(String country, EFlowBendingMode mode, double left, double right) {
 		if (left > right) {
-			return threePointSearch(mode, right, left);
+			return threePointSearch(country, mode, right, left);
 		} else {
 			double middle = (right + left) / 2;
-			double middleValue = calculateError(mode, middle);
+			double middleValue = calculateError(country, mode, middle);
 			while (right - left > EPSILON) {
 				boolean addRight = right - middle > middle - left;
 				double middleLeft = addRight ? middle : (left + middle) / 2;
-				double middleLeftValue = addRight ? middleValue : calculateError(mode, middleLeft);
+				double middleLeftValue = addRight ? middleValue : calculateError(country, mode, middleLeft);
 				double middleRight = addRight ? (right + middle) / 2 : middle;
-				double middleRightValue = addRight ? calculateError(mode, middleRight) : middleValue;
+				double middleRightValue = addRight ? calculateError(country, mode, middleRight) : middleValue;
 				if (middleLeftValue < middleRightValue) {
 					middle = middleLeft;
 					middleValue = middleLeftValue;
@@ -109,9 +111,9 @@ public class Optimizer {
 		}
 	}
 
-	protected double calculateError(EFlowBendingMode mode, double bending) {
-		setBending(mode, bending);
-		double[] avgs = average(calculateReuse());
+	protected double calculateError(String country, EFlowBendingMode mode, double bending) {
+		setBending(country, mode, bending);
+		double[] avgs = average(calculateReuse(country));
 		double mean = average(avgs);
 		return calcError(avgs, mean);
 	}
@@ -141,7 +143,7 @@ public class Optimizer {
 		return sum / ds.length;
 	}
 
-	protected void setBending(EFlowBendingMode mode, double bending) {
+	protected void setBending(String country, EFlowBendingMode mode, double bending) {
 		for (InputOutputGraph[] graphs : this.graphs) {
 			for (InputOutputGraph graph : graphs) {
 				graph.getCountry(country).deriveOrigins(mode, bending, BENDING_EPSILON);
@@ -149,7 +151,7 @@ public class Optimizer {
 		}
 	}
 
-	protected double[][] calculateReuse() {
+	protected double[][] calculateReuse(String country) {
 		double[][] reuse = new double[levels.length][];
 		for (int i = 0; i < reuse.length; i++) {
 			reuse[i] = calculateReuse(country, graphs[i]);
@@ -168,20 +170,20 @@ public class Optimizer {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		System.out.println("Country\tmode\tbending\tvar\tcov\tstdDev\tSectors...");
 		InputOutputGraph graph = new WiodInputOutputGraph(2008);
+		Optimizer test = new Optimizer(graph.copy(), 5323431, 5);
 		for (Country country : graph.getCountries()) {
-			Optimizer test = new Optimizer(graph.copy(), country.getName(), 5323431 ^ country.getName().hashCode(), 5, true);
 			// EFlowBendingMode mode = EFlowBendingMode.DEFAULT;
 			for (EFlowBendingMode mode : EFlowBendingMode.values()) {
-				double bending = test.minimizeCovariance(mode);
-				test.print(mode.name(), bending);
+				double bending = test.minimizeCovariance(country.getName(), mode);
+				test.print(country.getName(), mode.name(), bending);
 			}
-			test.setBending(EFlowBendingMode.DEFAULT, 0.0);
-			test.print("Leontief", 0.0);
+			test.setBending(country.getName(), EFlowBendingMode.DEFAULT, 0.0);
+			test.print(country.getName(), "Leontief", 0.0);
 		}
 	}
 
-	protected void print(String mode, double bending) {
-		double[][] reuse = calculateReuse();
+	protected void print(String country, String mode, double bending) {
+		double[][] reuse = calculateReuse(country);
 		double[] avg = average(reuse);
 		double var = new Variance().evaluate(avg);
 		double cov = new Covariance().covariance(levels, avg);
